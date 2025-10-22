@@ -19,6 +19,7 @@
   - [2️⃣ Development](#2️⃣-development)
   - [3️⃣ Deploy lên Netlify](#3️⃣-deploy-lên-netlify)
 - [🔐 Authentication & JWT Token Management](./docs/authentication.md)
+- [🚀 Setup Guide](./SETUP.md)
 - [📊 Tiến độ dự án](#-tiến-độ-dự-án)
 - [📝 Lịch sử thay đổi](#-lịch-sử-thay-đổi)
 - [🔧 Dev Log](./docs/dev-log.md)
@@ -104,7 +105,10 @@ trflashcard/
 └── middleware.ts
 ```
 
-## 🚀 Lệnh khởi tạo và phát triển
+## 🚀 Setup & Development
+
+### 📋 **Quick Start**
+Để bắt đầu với dự án, hãy xem hướng dẫn chi tiết tại: **[🚀 Setup Guide](./SETUP.md)**
 
 ### 0️⃣ Cài đặt Node.js và npm (Windows PowerShell)
 
@@ -335,3 +339,13 @@ trflashcard/
 1. **Tạo CRUD pages** cho members và cards
 2. **Tạo API endpoints** cho mobile app
 3. **Deploy lên Netlify**
+
+---
+
+## 📚 Tài liệu tham khảo
+
+- **[🚀 Setup Guide](./SETUP.md)** - Hướng dẫn cài đặt và chạy dự án
+- **[🔐 Authentication Guide](./docs/authentication.md)** - Hướng dẫn authentication
+- **[🔧 Dev Log](./docs/dev-log.md)** - Log các vấn đề đã gặp và cách xử lý
+- **[🗄️ Database Schema](./ddl/basic.sql)** - Schema database
+- **[📦 Package.json](./package.json)** - Dependencies và scripts
