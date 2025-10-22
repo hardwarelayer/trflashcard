@@ -1,10 +1,11 @@
 "use client";
 
-import { useList } from "@refinedev/core";
-import { Card, Col, Row, Statistic } from "antd";
+import { Card, Col, Row, Statistic, Spin } from "antd";
 import { UserOutlined, BookOutlined, SettingOutlined } from "@ant-design/icons";
 import AdminLayout from "@/components/layout/admin-layout";
 import { use } from "react";
+import { supabaseBrowserClient as supabase } from "../../../../lib/supabase/client";
+import { useEffect, useState } from "react";
 
 interface DashboardPageProps {
   params: Promise<{
@@ -15,11 +16,68 @@ interface DashboardPageProps {
 export default function DashboardPage({ params }: DashboardPageProps) {
   const { locale } = use(params);
   
-  // Mock data for now - will be replaced with real data later
-  const totalMembers = 0;
-  const totalCards = 0;
-  const recentMembers = 0;
-  const recentCards = 0;
+  // Real data from Supabase
+  const [totalMembers, setTotalMembers] = useState(0);
+  const [totalCards, setTotalCards] = useState(0);
+  const [recentMembers, setRecentMembers] = useState(0);
+  const [recentCards, setRecentCards] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
+        
+        // Fetch total members
+        const { count: membersCount } = await supabase
+          .from('demo_member')
+          .select('*', { count: 'exact', head: true });
+        
+        // Fetch total cards
+        const { count: cardsCount } = await supabase
+          .from('demo_card')
+          .select('*', { count: 'exact', head: true });
+        
+        // Fetch recent members (last 7 days)
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        
+        const { count: recentMembersCount } = await supabase
+          .from('demo_member')
+          .select('*', { count: 'exact', head: true })
+          .gte('created_at', sevenDaysAgo.toISOString());
+        
+        // Fetch recent cards (last 7 days)
+        const { count: recentCardsCount } = await supabase
+          .from('demo_card')
+          .select('*', { count: 'exact', head: true })
+          .gte('created_at', sevenDaysAgo.toISOString());
+        
+        setTotalMembers(membersCount || 0);
+        setTotalCards(cardsCount || 0);
+        setRecentMembers(recentMembersCount || 0);
+        setRecentCards(recentCardsCount || 0);
+        
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+  if (loading) {
+    return (
+      <AdminLayout locale={locale}>
+        <div style={{ textAlign: 'center', padding: '50px' }}>
+          <Spin size="large" />
+          <p style={{ marginTop: '16px' }}>Loading dashboard data...</p>
+        </div>
+      </AdminLayout>
+    );
+  }
 
   return (
     <AdminLayout locale={locale}>
