@@ -12,13 +12,18 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { ColorModeContextProvider } from "@contexts/color-mode";
 import { authProvider } from "@providers/auth-provider/supabase-auth-provider.client";
 import { dataProvider } from "@providers/data-provider";
+import { Layout } from "antd";
+import Sidebar from "@/components/navigation/sidebar";
 import "@refinedev/antd/dist/reset.css";
+
+const { Content } = Layout;
 
 interface RefineWrapperProps {
   children: React.ReactNode;
+  locale?: string;
 }
 
-export default function RefineWrapper({ children }: RefineWrapperProps) {
+export default function RefineWrapper({ children, locale = 'vi' }: RefineWrapperProps) {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -43,18 +48,18 @@ export default function RefineWrapper({ children }: RefineWrapperProps) {
                 resources={[
                   {
                     name: "dashboard",
-                    list: "/dashboard",
+                    list: "/vi/dashboard",
                     meta: {
                       label: "Dashboard",
                       icon: "🏠",
                     },
                   },
                   {
-                    name: "members",
-                    list: "/members",
-                    create: "/members/create",
-                    edit: "/members/edit/:id",
-                    show: "/members/show/:id",
+                    name: "demo_member",
+                    list: "/vi/members",
+                    create: "/vi/members/create",
+                    edit: "/vi/members/edit/:id",
+                    show: "/vi/members/show/:id",
                     meta: {
                       label: "Members",
                       icon: "👥",

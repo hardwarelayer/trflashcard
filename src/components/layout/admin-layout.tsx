@@ -1,7 +1,7 @@
 "use client";
 
-import { Layout } from 'antd';
-import Sidebar from '../navigation/sidebar';
+import { Layout } from "antd";
+import Sidebar from "@/components/navigation/sidebar";
 
 const { Content } = Layout;
 
@@ -15,14 +15,7 @@ export default function AdminLayout({ children, locale }: AdminLayoutProps) {
     <Layout style={{ minHeight: '100vh' }}>
       <Sidebar locale={locale} />
       <Layout>
-        <Content
-          style={{
-            margin: 0,
-            padding: '24px',
-            background: '#f5f5f5',
-            minHeight: '100vh',
-          }}
-        >
+        <Content style={{ padding: '24px' }}>
           {children}
         </Content>
       </Layout>
