@@ -60,7 +60,8 @@ CREATE TABLE demo_system_config (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     config_key VARCHAR(100) UNIQUE NOT NULL,
     config_value TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 -- Thêm cấu hình hệ thống mặc định
@@ -269,6 +270,26 @@ COMMENT ON TABLE demo_system_config IS 'Bảng cấu hình hệ thống demo';
 COMMENT ON COLUMN demo_member.status IS '1: hoạt động, 0: không hoạt động';
 COMMENT ON COLUMN demo_card.title IS 'Tiêu đề demo_card';
 COMMENT ON COLUMN demo_card.content IS 'Nội dung demo_card';
+
+-- =====================================================
+-- 7. TRIGGERS
+-- Auto-update updated_at columns
+-- =====================================================
+
+-- Function để tự động update updated_at
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+-- Trigger cho demo_system_config
+CREATE TRIGGER update_demo_system_config_updated_at 
+    BEFORE UPDATE ON demo_system_config 
+    FOR EACH ROW 
+    EXECUTE FUNCTION update_updated_at_column();
 
 -- =====================================================
 -- END OF SCHEMA

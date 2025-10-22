@@ -188,7 +188,6 @@ npm run build
 ### ✅ **Đã hoàn thành**
 
 #### 🎨 **Phase 3: CRUD Pages & Navigation** *(Hoàn thành 100%)*
-- [x] **Login improvements** - Thêm dropdown chọn ngôn ngữ ✅
 - [x] **Navigation system** - Sidebar menu và routing ✅
 - [x] **Logout functionality** - Session management ✅
 - [x] **Members CRUD** - Quản lý thành viên hoàn chỉnh ✅
@@ -198,6 +197,7 @@ npm run build
 - [x] **Dashboard real data** - Kết nối database thực tế ✅
 - [x] **Supabase integration** - Direct client cho data fetching ✅
 - [x] **Layout management** - Admin layout vs Login layout ✅
+- [x] **Settings page** - System configuration management ✅
 
 ### 📋 **Kế hoạch**
 
@@ -212,6 +212,13 @@ npm run build
 - [ ] **Environment variables** - Production config
 - [ ] **Netlify deployment** - Static site hosting
 - [ ] **Testing** - Unit tests và integration tests
+
+#### 🌍 **Phase 6: i18n Implementation** *(Tách riêng)*
+- [ ] **Login page i18n** - Dropdown chọn ngôn ngữ
+- [ ] **Sidebar i18n** - Navigation menu đa ngôn ngữ
+- [ ] **Admin pages i18n** - Dashboard, Members, Cards, Settings
+- [ ] **Forms i18n** - Validation messages đa ngôn ngữ
+- [ ] **Responsive design** - Mobile-friendly interface
 
 ---
 
@@ -350,7 +357,7 @@ trflashcard/
 ### 🗓️ **22/10/2025 - Cập nhật Phase 3 Planning**
 
 #### 📋 **Phân tích hiện trạng**
-- **Login page**: Có form cơ bản nhưng thiếu dropdown chọn ngôn ngữ
+- **Login page**: Có form cơ bản nhưng thiếu dropdown chọn ngôn ngữ *(chuyển sang Phase 6)*
 - **Dashboard**: Có layout cơ bản nhưng dùng mock data, thiếu navigation
 - **CRUD pages**: Chưa có trang quản lý members và cards
 - **Navigation**: Chưa có sidebar menu và routing system
@@ -358,19 +365,20 @@ trflashcard/
 #### 🎯 **Cập nhật Phase 3 scope**
 - **Mở rộng Phase 3** từ chỉ CRUD pages thành "CRUD Pages & Navigation"
 - **Bổ sung tasks**:
-  - Login improvements (language dropdown)
   - Navigation system (sidebar menu)
   - Logout functionality
   - Dashboard real data integration
   - Complete CRUD operations
-  - Responsive design
   - Forms validation
+  - Settings page
+- **Loại bỏ i18n tasks** (chuyển sang Phase 6)
 
 #### 📊 **Kết quả cập nhật**
 - ✅ **Phase 3 scope** được mở rộng và chi tiết hóa
-- ✅ **Task breakdown** rõ ràng với 8 main tasks
+- ✅ **Task breakdown** rõ ràng với 9 main tasks (loại bỏ i18n)
 - ✅ **Timeline** được điều chỉnh phù hợp
 - ✅ **Documentation** được cập nhật đầy đủ
+- ✅ **i18n tách riêng** thành Phase 6
 
 ### 🗓️ **22/10/2025 - Cập nhật tiến độ Phase 3**
 
@@ -384,9 +392,9 @@ trflashcard/
 
 #### ✅ **Hoàn thành Navigation & Layout**
 - **Sidebar**: Navigation menu với Dashboard, Members, Cards, Settings
-- **Language Switcher**: Dropdown chọn ngôn ngữ ở login page
 - **Logout**: Chức năng đăng xuất hoạt động
 - **Layout Management**: Sửa vấn đề nested sidebar
+- **Language Switcher**: *(Chuyển sang Phase 6 - i18n)*
 
 #### ✅ **Hoàn thành Technical Fixes**
 - **Next.js 15**: Sửa lỗi params as Promise
@@ -394,10 +402,11 @@ trflashcard/
 - **Forms**: Sửa lỗi useForm warnings
 - **Layout**: Tách riêng login layout và admin layout
 
-#### 📊 **Tiến độ Phase 3: 100% (10/10 tasks)**
-- **Đã hoàn thành**: 10 tasks
+#### 📊 **Tiến độ Phase 3: 100% (9/9 tasks)**
+- **Đã hoàn thành**: 9 tasks (loại bỏ i18n tasks)
 - **Cards CRUD**: Create, Read, Update, Delete với member dropdown
 - **Dashboard real data**: Kết nối Supabase, hiển thị statistics thực tế
+- **Settings page**: System configuration management
 - **Supabase integration**: Direct client thay vì Refine hooks
 - **Layout management**: Tách riêng login và admin layouts
 - **Technical fixes**: Next.js 15 params, routing, forms validation
@@ -421,26 +430,37 @@ trflashcard/
 - **Performance**: Chỉ fetch count, không fetch toàn bộ data
 - **Real-time**: Data được fetch từ Supabase database
 
+#### ✅ **Settings Page Implementation**
+- **System Configuration**: Quản lý cấu hình hệ thống
+- **Database Integration**: Kết nối với `demo_system_config` table
+- **Form Validation**: Ant Design forms với validation rules
+- **Error Handling**: RLS policies và database schema fixes
+- **Real-time Updates**: Auto-save và error handling
+
 #### ✅ **Technical Improvements**
 - **Supabase Direct Client**: Thay thế Refine hooks bằng direct Supabase client
 - **Import Path Fix**: Sửa lỗi module resolution với relative paths
 - **Code Cleanup**: Dọn dẹp debug logs và unused imports
 - **Error Resolution**: Sửa lỗi member dropdown empty
+- **Database Schema**: Thêm `updated_at` column và triggers
+- **RLS Policies**: Fix permissions cho INSERT/UPDATE operations
 
 #### 📊 **Kết quả Phase 3**
 - ✅ **Members CRUD**: Hoàn chỉnh với validation
 - ✅ **Cards CRUD**: Hoàn chỉnh với member integration
 - ✅ **Dashboard**: Real data từ Supabase
-- ✅ **Navigation**: Sidebar với language switcher
+- ✅ **Settings**: System configuration management
+- ✅ **Navigation**: Sidebar menu hoạt động
 - ✅ **Authentication**: Login/Logout hoạt động
 - ✅ **Layout**: Tách riêng login và admin layouts
 - ✅ **Forms**: Validation cho tất cả forms
 - ✅ **Technical**: Sửa tất cả lỗi Next.js 15 và routing
+- ✅ **Database**: Schema hoàn chỉnh với RLS policies
 
 #### 🎯 **Mục tiêu tiếp theo**
 1. **Phase 4**: API endpoints cho mobile app
-2. **Phase 5**: Deploy lên Netlify
-3. **Future**: i18n implementation, responsive design
+2. **Phase 5**: Deploy lên Netlify  
+3. **Phase 6**: i18n implementation (tách riêng)
 
 ---
 
