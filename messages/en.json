@@ -1,0 +1,83 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "members": "Members",
+    "cards": "Cards",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "username": "Username",
+    "password": "Password",
+    "loginSuccess": "Login successful",
+    "loginError": "Login failed",
+    "logoutSuccess": "Logout successful"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "totalMembers": "Total Members",
+    "totalCards": "Total Cards",
+    "recentMembers": "Recent Members",
+    "recentCards": "Recent Cards"
+  },
+  "members": {
+    "title": "Member Management",
+    "list": "Member List",
+    "create": "Create Member",
+    "edit": "Edit Member",
+    "delete": "Delete Member",
+    "username": "Username",
+    "fullName": "Full Name",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "createdAt": "Created At",
+    "actions": "Actions"
+  },
+  "cards": {
+    "title": "Card Management",
+    "list": "Card List",
+    "create": "Create Card",
+    "edit": "Edit Card",
+    "delete": "Delete Card",
+    "title": "Title",
+    "content": "Content",
+    "member": "Member",
+    "createdAt": "Created At",
+    "actions": "Actions"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "pageSize": "Page Size",
+    "appName": "App Name",
+    "appVersion": "App Version"
+  },
+  "errors": {
+    "required": "This field is required",
+    "invalidEmail": "Invalid email",
+    "minLength": "Minimum {min} characters",
+    "maxLength": "Maximum {max} characters",
+    "networkError": "Network error",
+    "serverError": "Server error",
+    "unauthorized": "Unauthorized",
+    "notFound": "Not found"
+  }
+}
