@@ -187,22 +187,25 @@ npm run build
 
 ### 🚧 **Đang thực hiện**
 
-#### 🎨 **Phase 2: Giao diện admin** *(Tiếp theo)*
-- [ ] **Trang login** - Authentication với Supabase
-- [ ] **Trang quản lý members** - CRUD operations
-- [ ] **Trang quản lý cards** - CRUD operations
-- [ ] **Navigation** - Menu và routing
-- [ ] **Responsive design** - Mobile-friendly
+#### 🎨 **Phase 3: CRUD Pages & Navigation** *(Hiện tại)*
+- [ ] **Login improvements** - Thêm dropdown chọn ngôn ngữ
+- [ ] **Navigation system** - Sidebar menu và routing
+- [ ] **Logout functionality** - Session management
+- [ ] **Dashboard real data** - Kết nối database thực tế
+- [ ] **Members CRUD** - Quản lý thành viên hoàn chỉnh
+- [ ] **Cards CRUD** - Quản lý thẻ học hoàn chỉnh
+- [ ] **Responsive design** - Mobile-friendly interface
+- [ ] **Forms validation** - Ant Design forms với validation
 
 ### 📋 **Kế hoạch**
 
-#### 🔌 **Phase 3: API endpoints**
+#### 🔌 **Phase 4: API endpoints**
 - [ ] **JWT API** - Authentication cho mobile app
 - [ ] **Member API** - CRUD cho mobile app
 - [ ] **Card API** - CRUD cho mobile app
 - [ ] **Error handling** - Consistent error responses
 
-#### 🚀 **Phase 4: Deployment**
+#### 🚀 **Phase 5: Deployment**
 - [ ] **Supabase setup** - Database và authentication
 - [ ] **Environment variables** - Production config
 - [ ] **Netlify deployment** - Static site hosting
@@ -336,9 +339,36 @@ trflashcard/
 - ✅ **JWT functions** - Type assertion cho overloads
 
 #### 🎯 **Mục tiêu tiếp theo**
-1. **Tạo CRUD pages** cho members và cards
-2. **Tạo API endpoints** cho mobile app
-3. **Deploy lên Netlify**
+1. **Phase 3**: Hoàn thiện CRUD pages và navigation system
+2. **Phase 4**: Tạo API endpoints cho mobile app
+3. **Phase 5**: Deploy lên Netlify
+
+---
+
+### 🗓️ **22/10/2025 - Cập nhật Phase 3 Planning**
+
+#### 📋 **Phân tích hiện trạng**
+- **Login page**: Có form cơ bản nhưng thiếu dropdown chọn ngôn ngữ
+- **Dashboard**: Có layout cơ bản nhưng dùng mock data, thiếu navigation
+- **CRUD pages**: Chưa có trang quản lý members và cards
+- **Navigation**: Chưa có sidebar menu và routing system
+
+#### 🎯 **Cập nhật Phase 3 scope**
+- **Mở rộng Phase 3** từ chỉ CRUD pages thành "CRUD Pages & Navigation"
+- **Bổ sung tasks**:
+  - Login improvements (language dropdown)
+  - Navigation system (sidebar menu)
+  - Logout functionality
+  - Dashboard real data integration
+  - Complete CRUD operations
+  - Responsive design
+  - Forms validation
+
+#### 📊 **Kết quả cập nhật**
+- ✅ **Phase 3 scope** được mở rộng và chi tiết hóa
+- ✅ **Task breakdown** rõ ràng với 8 main tasks
+- ✅ **Timeline** được điều chỉnh phù hợp
+- ✅ **Documentation** được cập nhật đầy đủ
 
 ---
 
