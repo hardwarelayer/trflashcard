@@ -67,11 +67,11 @@ export default function RefineWrapper({ children, locale = 'vi' }: RefineWrapper
                     },
                   },
                   {
-                    name: "cards",
-                    list: "/cards",
-                    create: "/cards/create",
-                    edit: "/cards/edit/:id",
-                    show: "/cards/show/:id",
+                    name: "demo_card",
+                    list: "/vi/cards",
+                    create: "/vi/cards/create",
+                    edit: "/vi/cards/edit/:id",
+                    show: "/vi/cards/show/:id",
                     meta: {
                       label: "Cards",
                       icon: "📚",
