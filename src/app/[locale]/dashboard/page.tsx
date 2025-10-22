@@ -3,8 +3,18 @@
 import { useList } from "@refinedev/core";
 import { Card, Col, Row, Statistic } from "antd";
 import { UserOutlined, BookOutlined, SettingOutlined } from "@ant-design/icons";
+import AdminLayout from "@/components/layout/admin-layout";
+import { use } from "react";
 
-export default function DashboardPage() {
+interface DashboardPageProps {
+  params: Promise<{
+    locale: string;
+  }>;
+}
+
+export default function DashboardPage({ params }: DashboardPageProps) {
+  const { locale } = use(params);
+  
   // Mock data for now - will be replaced with real data later
   const totalMembers = 0;
   const totalCards = 0;
@@ -12,10 +22,11 @@ export default function DashboardPage() {
   const recentCards = 0;
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1 style={{ fontSize: '24px', marginBottom: '20px' }}>
-        🎉 TR Flashcard Admin Dashboard
-      </h1>
+    <AdminLayout locale={locale}>
+      <div>
+        <h1 style={{ fontSize: '24px', marginBottom: '20px' }}>
+          🎉 TR Flashcard Admin Dashboard
+        </h1>
 
       <Row gutter={16} style={{ marginBottom: '20px' }}>
         <Col span={6}>
@@ -80,6 +91,7 @@ export default function DashboardPage() {
           </Card>
         </Col>
       </Row>
-    </div>
+      </div>
+    </AdminLayout>
   );
 }
