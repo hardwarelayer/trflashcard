@@ -313,6 +313,93 @@ Event handlers cannot be passed to Client Component props.
 
 ---
 
+## 🚨 **Vấn đề 39: Password Hashing Inconsistency**
+
+### ❌ **Lỗi gặp phải:**
+- **Database Schema**: Sample data có hashed passwords với bcrypt
+- **Member CRUD**: Create/Edit forms lưu password **raw text** (không hash)
+- **Security Issue**: Inconsistency nghiêm trọng về bảo mật
+- **API Testing**: API login fail vì expect hashed passwords nhưng database có raw passwords
+
+### 🔍 **Nguyên nhân:**
+1. **Database Design**: Sample data được hash đúng cách
+2. **Form Logic**: Create/Edit forms không có password hashing
+3. **Data Flow**: Refine forms gửi raw password trực tiếp đến database
+4. **Testing Gap**: Không test password hashing trong development
+
+### 🛠️ **Cách giải quyết:**
+
+#### **Bước 1: Thử onFinish callback (Failed)**
+```typescript
+// ❌ Không hoạt động
+const { formProps, saveButtonProps } = useForm({
+  resource: "demo_member",
+  onFinish: async (values) => {
+    if (values.password) {
+      values.password = await bcrypt.hash(values.password, 10);
+    }
+    return values;
+  }
+});
+```
+
+#### **Bước 2: Thử transform callback (Failed)**
+```typescript
+// ❌ Không hoạt động
+const { formProps, saveButtonProps } = useForm({
+  resource: "demo_member",
+  transform: async (values) => {
+    if (values.password) {
+      values.password = await bcrypt.hash(values.password, 10);
+    }
+    return values;
+  }
+});
+```
+
+#### **Bước 3: Custom Data Provider (Success)**
+```typescript
+// ✅ Hoạt động
+export const dataProvider = {
+  ...baseDataProvider,
+  create: async ({ resource, variables, meta }) => {
+    if (resource === "demo_member" && variables?.password) {
+      variables.password = await bcrypt.hash(variables.password, 10);
+    }
+    return baseDataProvider.create({ resource, variables, meta });
+  },
+  update: async ({ resource, id, variables, meta }) => {
+    if (resource === "demo_member" && variables?.password && variables.password.trim() !== '') {
+      variables.password = await bcrypt.hash(variables.password, 10);
+    } else if (resource === "demo_member" && variables?.password === '') {
+      delete variables.password;
+    }
+    return baseDataProvider.update({ resource, id, variables, meta });
+  },
+  // ... other methods
+};
+```
+
+### 📝 **Kết quả:**
+- ✅ **Create Member**: Password được hash tự động
+- ✅ **Edit Member**: Password được hash nếu có thay đổi
+- ✅ **Database Consistency**: Tất cả passwords đều được hash
+- ✅ **Security**: Production-ready password hashing
+
+### 🎯 **Bài học rút ra:**
+1. **Refine Callbacks**: `onFinish` và `transform` không hoạt động như mong đợi
+2. **Data Provider Layer**: Xử lý business logic ở tầng data provider hiệu quả hơn
+3. **Security First**: Luôn hash passwords từ đầu, không để raw passwords
+4. **Testing**: Test password hashing trong development phase
+5. **Architecture**: Tách biệt concerns - forms chỉ UI, data provider xử lý logic
+
+### 🔧 **Files Modified:**
+- `src/providers/data-provider/index.ts` - Custom data provider với password hashing
+- `src/app/[locale]/members/create/page.tsx` - Clean form code
+- `src/app/[locale]/members/edit/[id]/page.tsx` - Clean form code
+
+---
+
 ## 🚨 **Vấn đề 12: QueryClient Missing**
 
 ### ❌ **Lỗi gặp phải:**
