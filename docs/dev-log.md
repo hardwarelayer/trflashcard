@@ -820,3 +820,313 @@ Failed to compile: ./src/app/[locale]/test-db/page.tsx
 ### 🚨 **Vấn đề 33: Navigation Menu**
 - **Lỗi có thể gặp:** Refine menu không hiển thị đúng
 - **Cách phòng tránh:** Kiểm tra resource configuration và menu setup
+
+---
+
+## 🚨 **Vấn đề 34: Supabase RLS Policies và Database Schema**
+
+### ❌ **Lỗi gặp phải:**
+```
+Error saving settings: {code: '42501', details: null, hint: null, message: 'new row violates row-level security policy for table "demo_system_config"'}
+Error saving settings: {code: '42703', details: null, hint: null, message: 'record "new" has no field "updated_at"'}
+```
+
+### 🔍 **Nguyên nhân:**
+1. **RLS Policies thiếu permissions:** `demo_system_config` table chỉ có `SELECT` policy, thiếu `INSERT`/`UPDATE` policies
+2. **Database schema thiếu column:** `demo_system_config` table không có `updated_at` column
+3. **Supabase client behavior:** Supabase client tự động thêm `updated_at` field vào mọi operation
+4. **Upsert operation:** `upsert()` method gửi cả `created_at` và `updated_at` fields
+
+### ✅ **Cách xử lý:**
+1. **Thêm RLS policies cho INSERT/UPDATE:**
+   ```sql
+   -- Thêm policy INSERT
+   CREATE POLICY "Demo_system_config có thể insert bởi user đã xác thực" ON demo_system_config
+       FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+   -- Thêm policy UPDATE  
+   CREATE POLICY "Demo_system_config có thể update bởi user đã xác thực" ON demo_system_config
+       FOR UPDATE USING (auth.role() = 'authenticated');
+   ```
+
+2. **Thêm `updated_at` column vào database schema:**
+   ```sql
+   -- Cập nhật basic.sql
+   CREATE TABLE demo_system_config (
+       id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+       config_key VARCHAR(100) UNIQUE NOT NULL,
+       config_value TEXT,
+       created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+       updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()  -- ✅ Thêm column này
+   );
+   ```
+
+3. **Tạo trigger để tự động update `updated_at`:**
+   ```sql
+   -- Function để tự động update updated_at
+   CREATE OR REPLACE FUNCTION update_updated_at_column()
+   RETURNS TRIGGER AS $$
+   BEGIN
+       NEW.updated_at = NOW();
+       RETURN NEW;
+   END;
+   $$ language 'plpgsql';
+
+   -- Trigger cho demo_system_config
+   CREATE TRIGGER update_demo_system_config_updated_at 
+       BEFORE UPDATE ON demo_system_config 
+       FOR EACH ROW 
+       EXECUTE FUNCTION update_updated_at_column();
+   ```
+
+4. **Sử dụng insert/update thay vì upsert:**
+   ```typescript
+   // TRƯỚC - Gây lỗi updated_at
+   await supabase.from('demo_system_config').upsert(config, { onConflict: 'config_key' })
+
+   // SAU - Kiểm tra existing và insert/update riêng biệt
+   const { data: existingConfig } = await supabase
+     .from('demo_system_config')
+     .select('id')
+     .eq('config_key', config.config_key)
+     .maybeSingle();
+
+   if (existingConfig) {
+     // Update existing
+     await supabase.from('demo_system_config')
+       .update({ 
+         config_value: config.config_value,
+         updated_at: new Date().toISOString()
+       })
+       .eq('config_key', config.config_key);
+   } else {
+     // Insert new
+     await supabase.from('demo_system_config')
+       .insert({
+         config_key: config.config_key,
+         config_value: config.config_value,
+         updated_at: new Date().toISOString()
+       });
+   }
+   ```
+
+5. **Cập nhật error handling:**
+   ```typescript
+   catch (error: any) {
+     if (error?.code === '42501') {
+       message.error('Permission denied. Please check RLS policies for demo_system_config table.');
+     } else if (error?.code === '42703') {
+       message.error('Database field error. Please check table schema.');
+     } else {
+       message.error('Failed to save settings. Please try again.');
+     }
+   }
+   ```
+
+---
+
+## 📚 **Bài học rút ra từ Settings Page Issues:**
+
+1. **🔐 RLS Policies:** Luôn kiểm tra permissions cho tất cả operations (SELECT, INSERT, UPDATE, DELETE)
+2. **🗄️ Database Schema:** Supabase client yêu cầu `updated_at` column cho mọi table
+3. **⚡ Upsert vs Insert/Update:** Upsert có thể gây lỗi với missing columns, nên dùng insert/update riêng biệt
+4. **🔧 Error Handling:** Cần handle specific error codes để debug dễ hơn
+5. **📝 Database Scripts:** Consolidate tất cả SQL changes vào `basic.sql` thay vì tạo file rời rạc
+
+---
+
+## 🎯 **Kết quả Settings Page:**
+- ✅ **Database schema** hoàn chỉnh với `updated_at` column và triggers
+- ✅ **RLS policies** đầy đủ cho tất cả operations
+- ✅ **Settings page** hoạt động bình thường với form validation
+- ✅ **Error handling** rõ ràng cho từng loại lỗi
+- ✅ **Database consolidation** - Tất cả SQL trong `basic.sql`
+
+---
+
+## 🚨 **Vấn đề 35: Refine useList Hook không hoạt động với Supabase**
+
+### ❌ **Lỗi gặp phải:**
+```
+Member selection dropdown trong Create/Edit Card forms bị empty
+Members data: undefined
+Members loading: false
+Members error: null
+```
+
+### 🔍 **Nguyên nhân:**
+1. **Refine useList hook không tương thích:** `useList` từ `@refinedev/core` không hoạt động tốt với Supabase direct client
+2. **Data provider mismatch:** Refine data provider và Supabase client có cách fetch data khác nhau
+3. **Query options không đúng:** `useList` với `queryOptions` và `meta` không match với Supabase API
+4. **Import path issues:** Alias imports (`@/lib/supabase/client`) gây lỗi module resolution
+
+### ✅ **Cách xử lý:**
+1. **Thay thế useList bằng direct Supabase client:**
+   ```typescript
+   // TRƯỚC - Không hoạt động
+   import { useList } from "@refinedev/core";
+   const { data: membersData, isLoading: membersLoading } = useList({
+     resource: "demo_member",
+     queryOptions: { enabled: true },
+     meta: { select: "id, username, full_name" }
+   });
+
+   // SAU - Hoạt động tốt
+   import { supabaseBrowserClient as supabase } from "../../../../../lib/supabase/client";
+   import { useState, useEffect } from "react";
+
+   const [membersData, setMembersData] = useState<any[]>([]);
+   const [membersLoading, setMembersLoading] = useState(false);
+   const [membersError, setMembersError] = useState<any>(null);
+
+   useEffect(() => {
+     const fetchMembers = async () => {
+       try {
+         setMembersLoading(true);
+         const { data, error } = await supabase
+           .from('demo_member')
+           .select('id, username, full_name')
+           .order('created_at', { ascending: false });
+
+         if (error) {
+           setMembersError(error);
+         } else {
+           setMembersData(data || []);
+         }
+       } catch (err) {
+         setMembersError(err);
+       } finally {
+         setMembersLoading(false);
+       }
+     };
+
+     fetchMembers();
+   }, []);
+   ```
+
+2. **Sử dụng relative paths thay vì alias:**
+   ```typescript
+   // TRƯỚC - Gây lỗi module not found
+   import { supabaseBrowserClient as supabase } from "@/lib/supabase/client";
+
+   // SAU - Hoạt động
+   import { supabaseBrowserClient as supabase } from "../../../../../lib/supabase/client";
+   ```
+
+3. **Transform data cho Select component:**
+   ```typescript
+   const membersOptions = membersData?.map((member: any) => ({
+     label: `${member.username}${member.full_name ? ` (${member.full_name})` : ''}`,
+     value: member.id
+   })) || [];
+   ```
+
+4. **Thêm debug logs để troubleshooting:**
+   ```typescript
+   useEffect(() => {
+     console.log('Members data:', membersData);
+     console.log('Members loading:', membersLoading);
+     console.log('Members error:', membersError);
+     console.log('Members options:', membersOptions);
+   }, [membersData, membersLoading, membersError]);
+   ```
+
+---
+
+## 🚨 **Vấn đề 36: Next.js 15 params as Promise trong Cards CRUD**
+
+### ❌ **Lỗi gặp phải:**
+```
+Error: Route "/[locale]/cards/create" used `params.locale`. `params` should be awaited before using its properties.
+```
+
+### 🔍 **Nguyên nhân:**
+- Next.js 15 yêu cầu await `params` trước khi sử dụng
+- Cards CRUD pages chưa được update để handle Promise params
+- Interface chưa được cập nhật cho Promise type
+
+### ✅ **Cách xử lý:**
+1. **Cập nhật interface cho Promise params:**
+   ```typescript
+   // TRƯỚC
+   interface CreateCardPageProps {
+     params: { locale: string };
+   }
+
+   // SAU
+   interface CreateCardPageProps {
+     params: Promise<{ locale: string }>;
+   }
+   ```
+
+2. **Await params trong component:**
+   ```typescript
+   export default function CreateCardPage({ params }: CreateCardPageProps) {
+     const { locale } = use(params);  // ✅ Sử dụng React.use()
+     // ... rest of component
+   }
+   ```
+
+3. **Import React.use:**
+   ```typescript
+   import { use } from "react";
+   ```
+
+---
+
+## 🚨 **Vấn đề 37: Module Resolution với Alias Paths**
+
+### ❌ **Lỗi gặp phải:**
+```
+Module not found: Can't resolve '@/lib/supabase/client'
+Module not found: Can't resolve '@/components/layout/admin-layout'
+```
+
+### 🔍 **Nguyên nhân:**
+- TypeScript path mapping không hoạt động trong một số trường hợp
+- Next.js build process không resolve alias paths đúng cách
+- Import paths quá sâu gây confusion
+
+### ✅ **Cách xử lý:**
+1. **Sử dụng relative paths thay vì alias:**
+   ```typescript
+   // TRƯỚC - Có thể gây lỗi
+   import { supabaseBrowserClient as supabase } from "@/lib/supabase/client";
+   import AdminLayout from "@/components/layout/admin-layout";
+
+   // SAU - Luôn hoạt động
+   import { supabaseBrowserClient as supabase } from "../../../../../lib/supabase/client";
+   import AdminLayout from "../../../../../components/layout/admin-layout";
+   ```
+
+2. **Kiểm tra tsconfig.json paths:**
+   ```json
+   {
+     "compilerOptions": {
+       "paths": {
+         "@/*": ["./src/*"],
+         "@/lib/*": ["./src/lib/*"],
+         "@/components/*": ["./src/components/*"]
+       }
+     }
+   }
+   ```
+
+---
+
+## 📚 **Bài học rút ra từ Cards CRUD Implementation:**
+
+1. **🔗 Refine vs Direct Client:** Refine hooks không luôn hoạt động tốt với Supabase, nên dùng direct client
+2. **📁 Import Paths:** Relative paths đáng tin cậy hơn alias paths trong một số trường hợp
+3. **⚡ Next.js 15:** Luôn await params và sử dụng React.use() cho Promise params
+4. **🐛 Debug Process:** Thêm console.log để debug data fetching issues
+5. **🔄 Data Transformation:** Cần transform data từ database format sang component format
+
+---
+
+## 🎯 **Kết quả Cards CRUD:**
+- ✅ **Member dropdown** hoạt động với real data từ Supabase
+- ✅ **Create/Edit forms** hoạt động bình thường
+- ✅ **Next.js 15 compatibility** với Promise params
+- ✅ **Module resolution** với relative paths
+- ✅ **Data fetching** với direct Supabase client

@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import RefineWrapper from '@components/refine-wrapper'
+import RefineLayout from '@components/layout/refine-layout'
 
 interface LocaleLayoutProps {
   children: React.ReactNode
@@ -25,11 +26,8 @@ export default async function LocaleLayout({
   }
 
   return (
-    <RefineWrapper>
-      <div style={{ margin: 0, padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-        <h2>🌍 Locale: {locale}</h2>
-        {children}
-      </div>
+    <RefineWrapper locale={locale}>
+      {children}
     </RefineWrapper>
   )
 }
