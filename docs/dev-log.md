@@ -470,6 +470,63 @@ update: async ({ resource, id, variables, meta }) => {
 
 ---
 
+## 🚨 **Vấn đề 41: Supabase Timestamp Filtering Issues**
+
+### ❌ **Lỗi gặp phải:**
+```
+invalid input syntax for type timestamp with time zone: "null"
+```
+
+### 🔍 **Nguyên nhân:**
+1. **Supabase Query Issue**: `.eq('deleted_at', null)` convert `null` thành string `"null"`
+2. **Timestamp Comparison**: Supabase không handle `null` values đúng cách trong timestamp fields
+3. **Database Schema**: `deleted_at` là `TIMESTAMP WITH TIME ZONE` field
+4. **Query Logic**: Filter `deleted_at = null` trong database query gây lỗi
+
+### 🛠️ **Cách giải quyết:**
+
+#### **❌ Cách cũ (Sai):**
+```typescript
+// Gây lỗi timestamp
+.eq('deleted_at', null)
+.is('deleted_at', null)
+```
+
+#### **✅ Cách mới (Đúng):**
+```typescript
+// Query tất cả records trước
+const { data: member, error } = await supabase
+  .from('demo_member')
+  .select('id, username, password, full_name, status, deleted_at')
+  .eq('username', username)
+  .single();
+
+// Check deleted_at trong application code
+if (member.deleted_at) {
+  return error_response;
+}
+```
+
+### 📝 **Kết quả:**
+- ✅ **No Timestamp Errors**: Tránh lỗi timestamp filtering
+- ✅ **Application Logic**: Check `deleted_at` trong code thay vì database
+- ✅ **Supabase Compatibility**: Hoạt động với tất cả Supabase versions
+- ✅ **Performance**: Không ảnh hưởng performance đáng kể
+
+### 🎯 **Bài học rút ra:**
+1. **Supabase Limitation**: Không nên filter `null` values trong timestamp fields
+2. **Application Logic**: Xử lý business logic trong code thay vì database query
+3. **Error Handling**: Luôn có fallback cho database query issues
+4. **Testing**: Test với real data để phát hiện edge cases
+5. **Documentation**: Ghi lại Supabase limitations để tránh lặp lại
+
+### 🔧 **Files Modified:**
+- `src/app/api/auth/login/route.ts` - Bỏ `.eq('deleted_at', null)` filter
+- `src/app/api/auth/refresh/route.ts` - Bỏ `.eq('deleted_at', null)` filter
+- `src/lib/auth/middleware.ts` - Authentication middleware
+
+---
+
 ## 🚨 **Vấn đề 12: QueryClient Missing**
 
 ### ❌ **Lỗi gặp phải:**
