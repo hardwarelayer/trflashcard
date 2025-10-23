@@ -43,14 +43,14 @@ export default function EditMemberPage({ params }: EditMemberPageProps) {
         </Form.Item>
 
         <Form.Item
-          label="Password"
-          name="password"
+          label="Password mới"
+          name="new_password"
           rules={[
             { min: 6, message: "Password phải có ít nhất 6 ký tự!" }
           ]}
         >
           <Input.Password 
-            placeholder="Để trống nếu không muốn thay đổi password" 
+            placeholder="Nhập password mới (để trống nếu không muốn thay đổi)" 
           />
         </Form.Item>
 
