@@ -1130,3 +1130,88 @@ Module not found: Can't resolve '@/components/layout/admin-layout'
 - ✅ **Next.js 15 compatibility** với Promise params
 - ✅ **Module resolution** với relative paths
 - ✅ **Data fetching** với direct Supabase client
+
+---
+
+## 🚨 **Vấn đề 38: GitHub PR Merge Không Hoàn Chỉnh**
+
+### ❌ **Lỗi gặp phải:**
+```
+Sau khi merge PR từ feature/adminpages về main:
+- Sidebar không hiển thị trong admin web app
+- Một số components bị thiếu
+- Admin layout không hoạt động đúng
+```
+
+### 🔍 **Nguyên nhân:**
+1. **GitHub PR merge không hoàn chỉnh** - Có thể do:
+   - Merge conflicts không được resolve đúng
+   - Large file changes bị GitHub truncate
+   - Network issues khi merge
+   - GitHub UI bugs với complex merges
+   - File permissions hoặc encoding issues
+
+2. **Fast-forward merge issues** - GitHub có thể không merge đúng cách khi có nhiều file thay đổi
+
+3. **Component dependencies** - Sidebar component và admin layout có thể bị conflict
+
+### ✅ **Cách xử lý:**
+1. **Manual merge từ feature branch:**
+   ```bash
+   # Chuyển về main branch
+   git checkout main
+   
+   # Merge lại từ feature/adminpages
+   git merge feature/adminpages
+   ```
+
+2. **Kết quả merge thành công:**
+   ```
+   Updating aa52188..fad4881
+   Fast-forward
+   ddl/basic.sql                               |  23 ++-
+   docs/dev-log.md                             | 310 ++++++++++++++++++++++++++++
+   readme.MD                                   | 146 +++++++++++--
+   src/components/layout/admin-layout.tsx      |  24 +++
+   src/components/layout/login-layout.tsx      |  19 ++
+   src/components/navigation/sidebar.tsx       | 122 +++++++++++
+   # ... 24 files changed, 1865 insertions(+), 43 deletions(-)
+   ```
+
+3. **Verify components được restore:**
+   - ✅ `src/components/navigation/sidebar.tsx` - Sidebar component
+   - ✅ `src/components/layout/admin-layout.tsx` - Admin layout
+   - ✅ `src/components/layout/login-layout.tsx` - Login layout
+   - ✅ Tất cả CRUD pages (Members, Cards, Settings)
+   - ✅ Dashboard real data integration
+
+### 📚 **Bài học rút ra:**
+
+1. **🔍 Verify PR Merge:** Luôn kiểm tra kỹ sau khi merge PR, đặc biệt với complex changes
+2. **📁 Component Dependencies:** Khi có nhiều components liên quan, cần verify tất cả hoạt động
+3. **🔄 Manual Merge:** Nếu GitHub PR có vấn đề, manual merge từ command line thường hiệu quả hơn
+4. **🧪 Testing:** Sau mỗi merge, test ngay các chức năng chính (sidebar, navigation, CRUD)
+5. **📝 Documentation:** Ghi lại incidents để tránh lặp lại trong tương lai
+
+### 🎯 **Kết quả cuối cùng:**
+- ✅ **Sidebar hoạt động** - Navigation menu hiển thị đúng
+- ✅ **Admin layout** - Layout với sidebar và header
+- ✅ **All CRUD pages** - Members, Cards, Settings hoạt động
+- ✅ **Database integration** - Real data từ Supabase
+- ✅ **Phase 3 hoàn thành** - 100% functional
+
+### 🚨 **Prevention cho tương lai:**
+1. **Test ngay sau merge** - Không đợi đến khi phát hiện lỗi
+2. **Verify critical components** - Sidebar, navigation, main layouts
+3. **Backup strategy** - Luôn có branch backup trước khi merge
+4. **Incremental testing** - Test từng phần một thay vì test toàn bộ
+5. **Document merge process** - Ghi lại steps để tránh lỗi tương tự
+
+---
+
+## 🎯 **Kết quả cuối cùng:**
+- ✅ **Sidebar hoạt động** - Navigation menu hiển thị đúng
+- ✅ **Admin layout** - Layout với sidebar và header  
+- ✅ **All CRUD pages** - Members, Cards, Settings hoạt động
+- ✅ **Database integration** - Real data từ Supabase
+- ✅ **Phase 3 hoàn thành** - 100% functional
