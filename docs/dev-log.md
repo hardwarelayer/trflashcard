@@ -1143,17 +1143,25 @@ Sau khi merge PR từ feature/adminpages về main:
 - Admin layout không hoạt động đúng
 ```
 
-### 🔍 **Nguyên nhân:**
-1. **GitHub PR merge không hoàn chỉnh** - Có thể do:
-   - Merge conflicts không được resolve đúng
-   - Large file changes bị GitHub truncate
-   - Network issues khi merge
-   - GitHub UI bugs với complex merges
-   - File permissions hoặc encoding issues
+### 🔍 **Nguyên nhân thực sự:**
+1. **Workflow sai - Local main không sync với remote:**
+   - Local main branch không được pull trước khi tạo PR
+   - PR merge trên GitHub tạo ra commits mới trên remote
+   - Local main vẫn ở commit cũ (không sync với remote)
+   - Khi merge local, tạo ra divergent history
 
-2. **Fast-forward merge issues** - GitHub có thể không merge đúng cách khi có nhiều file thay đổi
+2. **Git history conflict:**
+   ```
+   Local main:    A → B (old commit)
+   Remote main:   A → B → C → D (PR merge commits)
+   ```
 
-3. **Component dependencies** - Sidebar component và admin layout có thể bị conflict
+3. **Non-fast-forward error:**
+   - Git không thể merge automatically
+   - Cần pull để sync local với remote
+   - Tạo ra conflicts khi push
+
+4. **Component dependencies** - Sidebar component và admin layout có thể bị conflict do history divergence
 
 ### ✅ **Cách xử lý:**
 1. **Manual merge từ feature branch:**
@@ -1187,11 +1195,12 @@ Sau khi merge PR từ feature/adminpages về main:
 
 ### 📚 **Bài học rút ra:**
 
-1. **🔍 Verify PR Merge:** Luôn kiểm tra kỹ sau khi merge PR, đặc biệt với complex changes
-2. **📁 Component Dependencies:** Khi có nhiều components liên quan, cần verify tất cả hoạt động
-3. **🔄 Manual Merge:** Nếu GitHub PR có vấn đề, manual merge từ command line thường hiệu quả hơn
-4. **🧪 Testing:** Sau mỗi merge, test ngay các chức năng chính (sidebar, navigation, CRUD)
-5. **📝 Documentation:** Ghi lại incidents để tránh lặp lại trong tương lai
+1. **🔄 Always Sync Local với Remote:** Luôn pull trước khi làm việc để đảm bảo local có latest changes
+2. **📋 Consistent Workflow:** Sử dụng một workflow nhất quán (PR hoặc local merge), không mix hai cách
+3. **🔍 Check Remote Status:** Luôn check remote status với `git fetch` trước khi merge
+4. **🔄 Manual Merge:** Nếu GitHub PR có vấn đề, manual merge từ command line thường hiệu quả hơn
+5. **🧪 Testing:** Sau mỗi merge, test ngay các chức năng chính (sidebar, navigation, CRUD)
+6. **📝 Documentation:** Ghi lại incidents để tránh lặp lại trong tương lai
 
 ### 🎯 **Kết quả cuối cùng:**
 - ✅ **Sidebar hoạt động** - Navigation menu hiển thị đúng
@@ -1201,11 +1210,28 @@ Sau khi merge PR từ feature/adminpages về main:
 - ✅ **Phase 3 hoàn thành** - 100% functional
 
 ### 🚨 **Prevention cho tương lai:**
-1. **Test ngay sau merge** - Không đợi đến khi phát hiện lỗi
-2. **Verify critical components** - Sidebar, navigation, main layouts
-3. **Backup strategy** - Luôn có branch backup trước khi merge
-4. **Incremental testing** - Test từng phần một thay vì test toàn bộ
-5. **Document merge process** - Ghi lại steps để tránh lỗi tương tự
+1. **🔄 Always Pull First:** Luôn `git pull origin main` trước khi làm việc
+2. **📋 Consistent Workflow:** Chọn một workflow (PR hoặc local merge) và stick với nó
+3. **🔍 Check Remote Status:** Sử dụng `git fetch` và `git status` để check remote changes
+4. **🧪 Test ngay sau merge** - Không đợi đến khi phát hiện lỗi
+5. **📁 Verify critical components** - Sidebar, navigation, main layouts
+6. **💾 Backup strategy** - Luôn có branch backup trước khi merge
+7. **📝 Document workflow** - Ghi lại steps để tránh lỗi tương tự
+
+### 🔧 **Workflow đúng:**
+```bash
+# Option 1: PR Workflow
+git checkout main
+git pull origin main
+git merge feature/branch
+git push origin main
+
+# Option 2: Local Merge Workflow  
+git checkout main
+git pull origin main
+git merge feature/branch
+git push origin main
+```
 
 ---
 
