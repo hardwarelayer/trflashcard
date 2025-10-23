@@ -400,6 +400,76 @@ export const dataProvider = {
 
 ---
 
+## 🚨 **Vấn đề 40: Double Hashing trong Edit Member**
+
+### ❌ **Lỗi gặp phải:**
+- **Edit Form**: Load hashed password từ database vào form
+- **User không thay đổi**: Form submit với hashed password
+- **Data Provider**: Hash lại hashed password → **Double hashing!**
+- **Kết quả**: Password bị hash 2 lần, không thể login được
+
+### 🔍 **Nguyên nhân:**
+1. **Form Logic**: Edit form load hashed password từ database
+2. **Data Flow**: User submit form với hashed password
+3. **Data Provider**: Hash lại hashed password
+4. **Result**: `"password123"` → `"$2b$10$abc..."` → `"$2b$10$def..."` (double hashed!)
+
+### 🛠️ **Cách giải quyết:**
+
+#### **Option 1: Không load password field (Chosen)**
+```typescript
+// ✅ Edit form - Không load password
+<Form.Item
+  label="Password mới"
+  name="new_password"  // Đổi tên field
+  rules={[
+    { min: 6, message: "Password phải có ít nhất 6 ký tự!" }
+  ]}
+>
+  <Input.Password 
+    placeholder="Nhập password mới (để trống nếu không muốn thay đổi)" 
+  />
+</Form.Item>
+```
+
+#### **Data Provider Logic:**
+```typescript
+// ✅ Handle new_password field
+update: async ({ resource, id, variables, meta }) => {
+  if (resource === "demo_member") {
+    if (variables?.new_password && variables.new_password.trim() !== '') {
+      // Hash password mới và đổi tên field
+      variables.password = await bcrypt.hash(variables.new_password, 10);
+      delete variables.new_password;
+    } else {
+      // Xóa password field nếu không có password mới
+      delete variables.password;
+      delete variables.new_password;
+    }
+  }
+  return baseDataProvider.update({ resource, id, variables, meta });
+}
+```
+
+### 📝 **Kết quả:**
+- ✅ **No Double Hashing**: Tránh hash lại hashed password
+- ✅ **Clean UX**: User chỉ nhập password mới khi cần
+- ✅ **Security**: Password vẫn được hash đúng cách
+- ✅ **Logic**: Tách biệt create vs edit logic
+
+### 🎯 **Bài học rút ra:**
+1. **Form Design**: Không nên load hashed passwords vào form fields
+2. **Data Flow**: Tách biệt create vs edit logic
+3. **User Experience**: Rõ ràng về việc thay đổi password
+4. **Security**: Tránh double hashing trong password handling
+5. **Field Naming**: Sử dụng `new_password` thay vì `password` trong edit
+
+### 🔧 **Files Modified:**
+- `src/app/[locale]/members/edit/[id]/page.tsx` - Đổi `password` → `new_password`
+- `src/providers/data-provider/index.ts` - Handle `new_password` field
+
+---
+
 ## 🚨 **Vấn đề 12: QueryClient Missing**
 
 ### ❌ **Lỗi gặp phải:**

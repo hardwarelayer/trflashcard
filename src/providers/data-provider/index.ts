@@ -18,11 +18,16 @@ export const dataProvider = {
   },
   update: async ({ resource, id, variables, meta }) => {
     // Hash password cho demo_member nếu có thay đổi
-    if (resource === "demo_member" && variables?.password && variables.password.trim() !== '') {
-      variables.password = await bcrypt.hash(variables.password, 10);
-    } else if (resource === "demo_member" && variables?.password === '') {
-      // Xóa password field nếu empty
-      delete variables.password;
+    if (resource === "demo_member") {
+      if (variables?.new_password && variables.new_password.trim() !== '') {
+        // Hash password mới và đổi tên field
+        variables.password = await bcrypt.hash(variables.new_password, 10);
+        delete variables.new_password;
+      } else {
+        // Xóa password field nếu không có password mới
+        delete variables.password;
+        delete variables.new_password;
+      }
     }
     return baseDataProvider.update({ resource, id, variables, meta });
   },
