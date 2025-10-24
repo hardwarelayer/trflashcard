@@ -27,23 +27,23 @@
 
 Đây là một ứng dụng skeleton demo để xây dựng các ứng dụng khác từ nó.
 
-## 🎯 Đối tượng sử dụng
+## Đối tượng sử dụng
 
 - **Administrator**: Một vài người quản trị viên
 
-## 🖥️ Màn hình cơ bản
+## Màn hình cơ bản
 
 - **Login**: Với dropdown chọn ngôn ngữ trước khi login
 - **Danh sách member**: CRUD với data object là đối tượng member (member không phải admin)
 - **Danh sách card**: CRUD với data là các card
 - **Logout**: Đăng xuất khỏi hệ thống
 
-## 🗄️ Database
+## Database
 
 - **Bảng member**: Quản lý thông tin thành viên
 - **Bảng card**: Card title và content demo do member đăng thông qua API
 
-## 🔧 Business Logic
+## Business Logic
 
 - **Admin**: Chỉ admin mới login vào web app (sử dụng Supabase Auth)
 - **Member**: Không login vào web app này
@@ -82,9 +82,9 @@
 - **Error Handling** - Consistent API responses
 - **Mobile Ready** - APIs designed for mobile app integration
 
-## 🌐 Ứng dụng Web - Bộ nhớ, Navigation, Đa ngôn ngữ
+## Ứng dụng Web - Bộ nhớ, Navigation, Đa ngôn ngữ
 
-### 💾 Quản lý bộ nhớ/State
+### Quản lý bộ nhớ/State
 
 - **Next.js App Router**: File-based routing, SSR/ISR, middleware auth
 - **TanStack Query**: Data fetching + caching, pagination, real-time updates
@@ -93,14 +93,14 @@
 - **Local Storage**: UI preferences (locale, theme)
 - **Session Management**: Supabase Auth cho admin, JWT cho mobile
 
-### 🧭 Navigation
+### Navigation
 
 - **App Router**: Layout chung (sidebar), segment cho từng module
 - **Routes**: `/dashboard`, `/members`, `/cards`, `/settings`, `/login`
 - **i18n Routing**: `/vi/*` (Vietnamese), `/en/*` (English)
 - **Auto Redirect**: `/` → `/vi` (default language)
 
-### 🌍 i18n Development Workflow
+### i18n Development Workflow
 
 #### 📁 Current Implementation
 
@@ -124,11 +124,11 @@ trflashcard/
 └── next.config.mjs
 ```
 
-#### 🌐 **Supported Languages:**
+#### **Supported Languages:**
 - **Vietnamese (vi)** - Default language
 - **English (en)** - Secondary language
 
-#### 🔧 **Implementation:**
+#### **Implementation:**
 - **next-intl** - i18n routing và translations
 - **Middleware** - Language detection và routing
 - **Translation Files** - JSON-based translations
@@ -142,11 +142,11 @@ trflashcard/
 
 ---
 
-## 📊 Tiến độ dự án
+## Tiến độ dự án
 
-### ✅ **Đã hoàn thành**
+### **Đã hoàn thành**
 
-#### 🏗️ **Phase 1: Cấu trúc cơ bản** *(21/10/2025)*
+#### **Phase 1: Cấu trúc cơ bản** *(21/10/2025)*
 - [x] **Khởi tạo dự án** - Refine + Next.js + Ant Design
 - [x] **Cấu trúc thư mục** - Tổ chức code theo best practices
 - [x] **TypeScript interfaces** - Định nghĩa types cho DemoMember, DemoCard, API
@@ -160,7 +160,23 @@ trflashcard/
 
 ### ✅ **Đã hoàn thành**
 
-#### 🎨 **Phase 3: CRUD Pages & Navigation** *(Hoàn thành 100%)*
+#### **Phase 2: Database & Authentication** *(Hoàn thành 100%)*
+- [x] **Database schema** - Tạo schema với tiền tố `demo_*` ✅
+- [x] **Row Level Security (RLS)** - Bảo mật dữ liệu ✅
+- [x] **Triggers** - Auto-update timestamps ✅
+- [x] **Soft Delete** - Xóa mềm với `deleted_at` ✅
+- [x] **Sample Data** - Dữ liệu test sẵn có ✅
+- [x] **Setup Supabase connection** - Client, server, middleware ✅
+  - [x] `lib/supabase/client.ts` - Browser client
+  - [x] `lib/supabase/server.ts` - Server-side client
+  - [x] `lib/supabase/middleware.ts` - Auth middleware
+- [x] **Setup authentication** - Dual authentication system ✅
+  - [x] **Admin**: Supabase Auth - Web app authentication
+  - [x] **Member**: Custom JWT - Mobile app authentication
+  - [x] **Password Hashing** - bcryptjs integration
+  - [x] **Auth middleware** - Route protection và guards
+
+#### **Phase 3: CRUD Pages & Navigation** *(Hoàn thành 100%)*
 - [x] **Navigation system** - Sidebar menu và routing ✅
 - [x] **Logout functionality** - Session management ✅
 - [x] **Members CRUD** - Quản lý thành viên hoàn chỉnh ✅
@@ -172,9 +188,9 @@ trflashcard/
 - [x] **Layout management** - Admin layout vs Login layout ✅
 - [x] **Settings page** - System configuration management ✅
 
-### 📋 **Kế hoạch**
+### **Kế hoạch**
 
-#### 🔌 **Phase 4: API endpoints** *(Tiến độ: 100% - Hoàn thành)*
+#### **Phase 4: API endpoints** *(Tiến độ: 100% - Hoàn thành)*
 - [x] **JWT API** - Authentication cho mobile app ✅
   - [x] `POST /api/auth/login` - Member login với JWT tokens
   - [x] `POST /api/auth/logout` - Token invalidation
@@ -190,7 +206,7 @@ trflashcard/
   - [x] `DELETE /api/cards/:id` - Delete card (soft delete)
 - [x] **Error handling** - Consistent error responses ✅
 
-#### 🚀 **Phase 5: Deployment** *(Tiến độ: 100% - Production Ready)*
+#### **Phase 5: Deployment** *(Tiến độ: 100% - Production Ready)*
 - [x] **Supabase production setup** - Database và authentication ✅
 - [x] **Environment variables** - Production configuration ✅
 - [x] **Vercel deployment** - Next.js optimized hosting ✅
@@ -207,7 +223,7 @@ trflashcard/
 - **App URL**: https://trflashcard-74k1a8rti-tientns-projects.vercel.app/vi/dashboard
 - **API Base**: https://trflashcard-74k1a8rti-tientns-projects.vercel.app/api
 
-#### 🌍 **Phase 6: i18n Enhancement** *(Kế hoạch)*
+#### **Phase 6: i18n Enhancement** *(Kế hoạch)*
 - [ ] **Login page i18n** - Dropdown chọn ngôn ngữ
 - [ ] **Sidebar i18n** - Navigation menu đa ngôn ngữ
 - [ ] **Admin pages i18n** - Dashboard, Members, Cards, Settings
@@ -216,16 +232,16 @@ trflashcard/
 
 ---
 
-## 📊 **Tổng Kết Tiến Độ Dự Án**
+## **Tổng Kết Tiến Độ Dự Án**
 
-### ✅ **Đã Hoàn Thành (5/6 Phases - 83%)**
+### **Đã Hoàn Thành (5/6 Phases - 83%)**
 - **Phase 1**: Cấu trúc cơ bản ✅ (100%)
-- **Phase 2**: Database & Authentication ✅ (100%)  
+- **Phase 2**: Database & Authentication ✅ (100% - Supabase + JWT + Auth Middleware)  
 - **Phase 3**: CRUD Pages & Navigation ✅ (100%)
 - **Phase 4**: API Endpoints ✅ (100% - JWT Auth + Member API + Card API)
 - **Phase 5**: Deployment ✅ (100% - Production Ready)
 
-### 📋 **Còn Lại (1/6 Phases - 17%)**
+### **Còn Lại (1/6 Phases - 17%)**
 - **Phase 6**: i18n Enhancement (Kế hoạch)
 
 ---
@@ -247,22 +263,22 @@ trflashcard/
 
 **📚 Detailed Documentation:** [🔧 Compatibility Notes](./docs/compatibility-notes.md)
 
-### 🎯 **Mục Tiêu Tiếp Theo**
+### **Mục Tiêu Tiếp Theo**
 1. **Phase 5**: Production testing và optimization (5% còn lại)
 2. **Phase 6**: i18n enhancement (Kế hoạch)
 
 ---
 
-## 🎉 **Recent Achievements**
+## **Recent Achievements**
 
-### **✅ Console & Build Fixes:**
+### **Console & Build Fixes:**
 - **useForm Warning** - Fixed duplicate form prop in create/edit pages
 - **Console Clean** - No more useForm connection warnings  
 - **Code Restore** - Settings page restored to original state
 - **Form Connection** - Proper form instance handling
 - **Build Success** - Clean production build with no warnings
 
-### **📊 Current Status:**
+### **Current Status:**
 - **Build Process** - 100% successful
 - **Console Errors** - 0 warnings/errors
 - **Form Components** - All working properly
@@ -382,11 +398,11 @@ const tokens = await generateTokens(member.id, member.username);
 
 ---
 
-## 📝 Lịch sử thay đổi
+## Lịch sử thay đổi
 
-### 🗓️ **21/10/2025**
+### **21/10/2025**
 
-#### ✨ **Cập nhật tên bảng database**
+#### **Cập nhật tên bảng database**
 - **Thay đổi**: Đổi tên tất cả bảng từ `member`, `card`, `system_config` thành `demo_member`, `demo_card`, `demo_system_config`
 - **Lý do**: Tránh xung đột với database hiện tại trong `staticweb/flashcard`
 - **Ảnh hưởng**: 
@@ -394,7 +410,7 @@ const tokens = await generateTokens(member.id, member.username);
   - TypeScript interfaces (`types/index.ts`)
   - Tất cả references trong code
 
-#### 🏗️ **Hoàn thành Phase 1**
+#### **Hoàn thành Phase 1**
 - **Cấu trúc dự án**: Tạo đầy đủ cấu trúc thư mục và file cấu hình
 - **Database schema**: Schema hoàn chỉnh với RLS, triggers, functions
 - **i18n setup**: Hỗ trợ đa ngôn ngữ vi/en
@@ -444,23 +460,36 @@ trflashcard/
 
 ---
 
-### 🗓️ **22/10/2025**
+### **22/10/2025**
 
-#### ✅ **Hoàn thành Phase 2: Database & Authentication**
+#### **Hoàn thành Phase 2: Database & Authentication**
 - **Database schema**: Đã tạo và chạy thành công trên Supabase
+- **Row Level Security (RLS)**: Bảo mật dữ liệu
+- **Triggers**: Auto-update timestamps
+- **Soft Delete**: Xóa mềm với `deleted_at`
+- **Sample Data**: Dữ liệu test sẵn có
+- **Setup Supabase connection**: Client, server, middleware
+  - `lib/supabase/client.ts` - Browser client
+  - `lib/supabase/server.ts` - Server-side client
+  - `lib/supabase/middleware.ts` - Auth middleware
+- **Setup authentication**: Dual authentication system
+  - **Admin**: Supabase Auth - Web app authentication
+  - **Member**: Custom JWT - Mobile app authentication
+  - **Password Hashing**: bcryptjs integration
+  - **Auth middleware**: Route protection và guards
 - **Supabase authentication**: Admin login hoạt động
 - **Admin pages**: Login và dashboard đã hoạt động
 - **i18n**: Hỗ trợ vi/en hoàn chỉnh
 - **Refine setup**: Tất cả components và providers đã hoạt động
 
-#### 🚨 **Các vấn đề đã xử lý trong Phase 2**
+#### **Các vấn đề đã xử lý trong Phase 2**
 - **Server vs Client Component conflicts**: Tạo client-side auth provider và RefineWrapper
 - **QueryClient missing**: Thêm QueryClientProvider vào RefineWrapper
 - **Nested HTML tags**: Sửa cấu trúc layout để tránh hydration errors
 - **Multiple Supabase clients**: Sử dụng chung một client instance
 - **Hardcoded credentials**: Xóa constants.ts và sử dụng environment variables
 
-#### 🔧 **Refine setup hoàn chỉnh**
+#### **Refine setup hoàn chỉnh**
 - **QueryClientProvider**: React Query cho data fetching
 - **AntdRegistry**: Ant Design components
 - **ColorModeContextProvider**: Theme management
@@ -468,7 +497,7 @@ trflashcard/
 - **RefineKbar**: Keyboard shortcuts
 - **GitHubBanner**: Refine branding
 
-#### 📊 **Kết quả Phase 2**
+#### **Kết quả Phase 2**
 - ✅ **Database**: demo_member, demo_card, demo_system_config tables
 - ✅ **Authentication**: Supabase Auth cho admin
 - ✅ **Admin pages**: Login và dashboard với Ant Design
@@ -514,7 +543,7 @@ trflashcard/
 
 ---
 
-### 🗓️ **22/10/2025 - Cập nhật Phase 3 Planning**
+### **22/10/2025 - Cập nhật Phase 3 Planning**
 
 #### 📋 **Phân tích hiện trạng**
 - **Login page**: Có form cơ bản nhưng thiếu dropdown chọn ngôn ngữ *(chuyển sang Phase 6)*
