@@ -201,24 +201,132 @@ npm run build
 
 ### 📋 **Kế hoạch**
 
-#### 🔌 **Phase 4: API endpoints**
-- [ ] **JWT API** - Authentication cho mobile app
-- [ ] **Member API** - CRUD cho mobile app
-- [ ] **Card API** - CRUD cho mobile app
+#### 🔌 **Phase 4: API endpoints** *(Tiến độ: 50% - JWT Auth + Member API)*
+- [x] **JWT API** - Authentication cho mobile app ✅
+  - [x] `POST /api/auth/login` - Member login với JWT tokens
+  - [x] `POST /api/auth/logout` - Token invalidation
+  - [x] `POST /api/auth/refresh` - Token refresh mechanism
+- [x] **Member API** - Mobile app operations (2 endpoints) ✅
+  - [x] `POST /api/members/register` - Đăng ký member mới (unique username)
+  - [x] `POST /api/members/change-password` - Đổi mật khẩu cho member
+- [ ] **Card API** - CRUD cho mobile app (5 endpoints)
+  - [ ] `GET /api/cards` - List cards của member
+  - [ ] `GET /api/cards/:id` - Get card details
+  - [ ] `POST /api/cards` - Create card
+  - [ ] `PUT /api/cards/:id` - Update card
+  - [ ] `DELETE /api/cards/:id` - Delete card
 - [ ] **Error handling** - Consistent error responses
 
-#### 🚀 **Phase 5: Deployment**
-- [ ] **Supabase setup** - Database và authentication
-- [ ] **Environment variables** - Production config
+#### 🚀 **Phase 5: Deployment** *(Kế hoạch)*
+- [ ] **Supabase production setup** - Database và authentication
+- [ ] **Environment variables** - Production configuration
 - [ ] **Netlify deployment** - Static site hosting
-- [ ] **Testing** - Unit tests và integration tests
+- [ ] **Testing suite** - Unit tests và integration tests
 
-#### 🌍 **Phase 6: i18n Implementation** *(Tách riêng)*
+#### 🌍 **Phase 6: i18n Enhancement** *(Kế hoạch)*
 - [ ] **Login page i18n** - Dropdown chọn ngôn ngữ
 - [ ] **Sidebar i18n** - Navigation menu đa ngôn ngữ
 - [ ] **Admin pages i18n** - Dashboard, Members, Cards, Settings
 - [ ] **Forms i18n** - Validation messages đa ngôn ngữ
 - [ ] **Responsive design** - Mobile-friendly interface
+
+---
+
+## 📊 **Tổng Kết Tiến Độ Dự Án**
+
+### ✅ **Đã Hoàn Thành (3.5/6 Phases - 58%)**
+- **Phase 1**: Cấu trúc cơ bản ✅ (100%)
+- **Phase 2**: Database & Authentication ✅ (100%)  
+- **Phase 3**: CRUD Pages & Navigation ✅ (100%)
+- **Phase 4**: API Endpoints ⚠️ (50% - JWT Auth + Member API)
+
+### 📋 **Còn Lại (2.5/6 Phases - 42%)**
+- **Phase 4**: API Endpoints (50% còn lại)
+  - Card API (5 endpoints): Full CRUD cho mobile app
+  - Error handling: Consistent error responses
+- **Phase 5**: Deployment (Kế hoạch)
+- **Phase 6**: i18n Enhancement (Kế hoạch)
+
+### 🎯 **Mục Tiêu Tiếp Theo**
+1. **Hoàn thành Phase 4**: Implement Card API + Error handling
+2. **Phase 5**: Production deployment
+3. **Phase 6**: i18n enhancement
+
+---
+
+## ⚠️ **Lưu Ý Quan Trọng**
+
+### 🔧 **Nguyên Tắc Làm Việc**
+- **Không đề xuất lệnh console**: Tất cả lệnh terminal/console do user tự thực hiện
+- **Phân tích chính xác**: Không nhầm lẫn giữa "định nghĩa" và "implement"
+- **Cập nhật document**: Ghi lại tiến độ và thay đổi chính xác
+
+### 📋 **Phase 4 Requirements**
+- **Member API**: Chỉ 2 endpoints cho mobile app (Registration + Password change)
+- **Card API**: 5 endpoints cho mobile app (Full CRUD)
+- **Authentication**: JWT tokens với access/refresh mechanism
+- **Security**: Password hashing, token verification, member validation
+
+### 🔐 **JWT Token System**
+
+#### **Token Structure**
+```typescript
+interface TokenPayload {
+  member_id: string;
+  username: string;
+  type: 'access' | 'refresh';
+}
+
+// Response format cho tất cả auth endpoints
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "expires_in": 3600,
+  "token_type": "Bearer"
+}
+```
+
+#### **Token Lifecycle**
+```
+Register → JWT Tokens → Mobile App
+    ↓
+Login → JWT Tokens → Mobile App  
+    ↓
+Refresh → New JWT Tokens → Mobile App
+    ↓
+Change Password → Same token validation
+```
+
+#### **Consistent Token Generation**
+- **Login API**: `generateTokens(member.id, member.username)`
+- **Register API**: `generateTokens(newMember.id, newMember.username)`
+- **Refresh API**: `generateTokens(member.id, member.username)`
+
+#### **Token Flow Consistency**
+Tất cả 3 auth endpoints đều sử dụng cùng một function `generateTokens()`:
+
+```typescript
+// 1. Login API (/api/auth/login)
+const tokens = await generateTokens(member.id, member.username);
+
+// 2. Register API (/api/members/register)  
+const tokens = await generateTokens(newMember.id, newMember.username);
+
+// 3. Refresh API (/api/auth/refresh)
+const tokens = await generateTokens(member.id, member.username);
+```
+
+#### **Token Features**
+- **Access Token**: 1 hour expiry
+- **Refresh Token**: 30 days expiry
+- **Shared Secret**: Cùng JWT_SECRET cho tất cả endpoints
+- **Interoperability**: Token từ register có thể dùng với refresh API
+- **Consistency**: Cùng token format cho tất cả authentication flows
+
+### 🗄️ **Database Schema**
+- **Tables**: `demo_member`, `demo_card`, `demo_system_config`
+- **Features**: RLS policies, triggers, soft delete, views, functions
+- **Security**: Row-level security, password hashing với bcrypt
 
 ---
 
@@ -461,6 +569,59 @@ trflashcard/
 1. **Phase 4**: API endpoints cho mobile app
 2. **Phase 5**: Deploy lên Netlify  
 3. **Phase 6**: i18n implementation (tách riêng)
+
+---
+
+### 🗓️ **22/10/2025 - Cập nhật Document & Phân Tích**
+
+#### ✅ **Documentation Updates**
+- **Tiến độ chính xác**: Phase 4 chỉ hoàn thành 25% (JWT Auth)
+- **Requirements rõ ràng**: Member API (2 endpoints), Card API (5 endpoints)
+- **Nguyên tắc làm việc**: Không đề xuất lệnh console
+- **Phân tích chính xác**: Không nhầm lẫn giữa "định nghĩa" và "implement"
+
+#### 📊 **Kết quả Document Update**
+- ✅ **Tiến độ rõ ràng**: 3.5/6 phases (58%)
+- ✅ **Requirements chi tiết**: API endpoints cụ thể
+- ✅ **JWT Token System**: Token structure và lifecycle
+- ✅ **Lưu ý quan trọng**: Nguyên tắc làm việc
+- ✅ **Mục tiêu tiếp theo**: Card API implementation
+
+---
+
+### 🗓️ **22/10/2025 - Hoàn thành Member API Implementation**
+
+#### ✅ **Member API Implementation**
+- **Register API**: `POST /api/members/register` - Đăng ký member mới
+  - Username uniqueness validation
+  - Password strength validation (min 6 chars)
+  - Password hashing với bcrypt
+  - JWT token generation
+  - Comprehensive error handling
+- **Change Password API**: `POST /api/members/change-password` - Đổi mật khẩu
+  - JWT authentication required
+  - Current password verification
+  - New password validation
+  - Password hashing với bcrypt
+  - Member status validation
+
+#### ✅ **API Testing Results**
+- **Register API**: ✅ Test thành công với username mới
+- **Change Password API**: ✅ Test thành công với POST method
+- **Token Flow**: ✅ Token từ register có thể dùng với change password
+- **Error Handling**: ✅ Validation và error responses hoạt động đúng
+
+#### 🔧 **Technical Issues Resolved**
+- **HTTP Method Issue**: Sử dụng POST thay vì PUT cho change password API
+- **Token Consistency**: Cùng token system cho tất cả auth endpoints
+- **Password Security**: bcrypt hashing với salt rounds = 10
+
+#### 📊 **Kết quả Member API**
+- ✅ **Register functionality**: Username uniqueness, password validation
+- ✅ **Change password functionality**: JWT auth, password verification
+- ✅ **Token interoperability**: Register → Change password flow
+- ✅ **Error handling**: Comprehensive error responses
+- ✅ **Security**: Password hashing, token verification
 
 ---
 
