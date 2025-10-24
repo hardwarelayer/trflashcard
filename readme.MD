@@ -219,10 +219,6 @@ trflashcard/
 
 **📚 Deployment Guide:** [🚀 Vercel Deployment Guide](./docs/VERCEL_DEPLOYMENT.md)
 
-### 🌐 **Production URLs:**
-- **App URL**: https://trflashcard-74k1a8rti-tientns-projects.vercel.app/vi/dashboard
-- **API Base**: https://trflashcard-74k1a8rti-tientns-projects.vercel.app/api
-
 #### **Phase 6: i18n Enhancement** *(Kế hoạch)*
 - [ ] **Login page i18n** - Dropdown chọn ngôn ngữ
 - [ ] **Sidebar i18n** - Navigation menu đa ngôn ngữ

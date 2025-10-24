@@ -321,7 +321,7 @@ Authorization: Bearer <access_token>
 
 ```bash
 # Test Member Registration
-curl -X POST https://trflashcard-74k1a8rti-tientns-projects.vercel.app/api/members/register \
+curl -X POST https://your-domain.vercel.app/api/members/register \
   -H "Content-Type: application/json" \
   -d '{
     "username": "testuser",
@@ -330,7 +330,7 @@ curl -X POST https://trflashcard-74k1a8rti-tientns-projects.vercel.app/api/membe
   }'
 
 # Test Login
-curl -X POST https://trflashcard-74k1a8rti-tientns-projects.vercel.app/api/auth/login \
+curl -X POST https://your-domain.vercel.app/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "username": "testuser",
@@ -338,7 +338,7 @@ curl -X POST https://trflashcard-74k1a8rti-tientns-projects.vercel.app/api/auth/
   }'
 
 # Test Card Creation (replace TOKEN with actual access token)
-curl -X POST https://trflashcard-74k1a8rti-tientns-projects.vercel.app/api/cards \
+curl -X POST https://your-domain.vercel.app/api/cards \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer TOKEN" \
   -d '{
@@ -350,9 +350,9 @@ curl -X POST https://trflashcard-74k1a8rti-tientns-projects.vercel.app/api/cards
 ### **Using Postman**
 
 1. **Create Collection**: "TR Flashcard API Tests"
-2. **Set Base URL**: `https://trflashcard-74k1a8rti-tientns-projects.vercel.app`
+2. **Set Base URL**: `https://your-domain.vercel.app`
 3. **Add Environment Variables**:
-   - `base_url`: `https://trflashcard-74k1a8rti-tientns-projects.vercel.app`
+   - `base_url`: `https://your-domain.vercel.app`
    - `access_token`: (will be set after login)
    - `refresh_token`: (will be set after login)
 
@@ -360,9 +360,9 @@ curl -X POST https://trflashcard-74k1a8rti-tientns-projects.vercel.app/api/cards
 
 1. **Install Thunder Client** extension
 2. **Create Collection**: "TR Flashcard API"
-3. **Set Base URL**: `https://trflashcard-74k1a8rti-tientns-projects.vercel.app`
+3. **Set Base URL**: `https://your-domain.vercel.app`
 4. **Add Environment Variables**:
-   - `base_url`: `https://trflashcard-74k1a8rti-tientns-projects.vercel.app`
+   - `base_url`: `https://your-domain.vercel.app`
    - `access_token`: (will be set after login)
 
 ## 🔍 Error Codes
@@ -410,8 +410,10 @@ curl -X POST https://trflashcard-74k1a8rti-tientns-projects.vercel.app/api/cards
 
 ## 🌐 Production URLs
 
-- **Base URL**: `https://trflashcard-74k1a8rti-tientns-projects.vercel.app`
-- **API Base**: `https://trflashcard-74k1a8rti-tientns-projects.vercel.app/api`
+- **Base URL**: `https://your-domain.vercel.app`
+- **API Base**: `https://your-domain.vercel.app/api`
+
+> **Note**: Replace `your-domain` with your actual Vercel deployment domain
 
 ## 📚 Related Documentation
 
