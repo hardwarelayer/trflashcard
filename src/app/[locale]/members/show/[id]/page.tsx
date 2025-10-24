@@ -19,10 +19,12 @@ interface ShowMemberPageProps {
 export default function ShowMemberPage({ params }: ShowMemberPageProps) {
   const { locale, id } = use(params);
   
-  const { data, isLoading } = useOne({
+  const { result: data, query } = useOne({
     resource: "demo_member",
     id: id
   });
+  
+  const isLoading = query.isLoading;
 
   const record = data?.data;
 

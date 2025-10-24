@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation'
 import RefineWrapper from '@components/refine-wrapper'
-import RefineLayout from '@components/layout/refine-layout'
 
 interface LocaleLayoutProps {
   children: React.ReactNode

@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function SimpleDashboard() {
   return (
     <div style={{ padding: '20px' }}>
@@ -6,8 +8,8 @@ export default function SimpleDashboard() {
       <div style={{ marginTop: '20px' }}>
         <h2>Test Links:</h2>
         <ul>
-          <li><a href="/vi/simple-dashboard">Vietnamese</a></li>
-          <li><a href="/en/simple-dashboard">English</a></li>
+          <li><Link href="/vi/simple-dashboard">Vietnamese</Link></li>
+          <li><Link href="/en/simple-dashboard">English</Link></li>
         </ul>
       </div>
     </div>

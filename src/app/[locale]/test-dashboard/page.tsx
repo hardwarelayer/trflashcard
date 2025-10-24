@@ -1,9 +1,12 @@
-"use client";
+import { getTranslations } from 'next-intl/server';
 
-import { useTranslations } from "next-intl";
+interface TestDashboardProps {
+  params: Promise<{ locale: string }>;
+}
 
-export default function TestDashboard() {
-  const t = useTranslations('dashboard');
+export default async function TestDashboard({ params }: TestDashboardProps) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'dashboard' });
   
   return (
     <div style={{ padding: '20px' }}>
@@ -14,8 +17,8 @@ export default function TestDashboard() {
         <ul>
           <li>Total Members: {t('totalMembers')}</li>
           <li>Total Cards: {t('totalCards')}</li>
-          <li>Members: {t('members')}</li>
-          <li>Cards: {t('cards')}</li>
+          <li>Recent Members: {t('recentMembers')}</li>
+          <li>Recent Cards: {t('recentCards')}</li>
         </ul>
       </div>
     </div>

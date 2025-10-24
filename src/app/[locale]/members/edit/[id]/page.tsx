@@ -1,6 +1,7 @@
 "use client";
 
 import { Edit, useForm } from "@refinedev/antd";
+import { useOne } from "@refinedev/core";
 import { Form, Input, Switch } from "antd";
 import AdminLayout from "@/components/layout/admin-layout";
 import { use } from "react";
@@ -15,13 +16,16 @@ interface EditMemberPageProps {
 export default function EditMemberPage({ params }: EditMemberPageProps) {
   const { locale, id } = use(params);
   
-  const { formProps, saveButtonProps, queryResult } = useForm({
+  const { formProps, saveButtonProps } = useForm({
     resource: "demo_member",
     id: id,
     redirect: "list"
   });
 
-  const memberData = queryResult?.data?.data;
+  const { result: memberData } = useOne({
+    resource: "demo_member",
+    id: id
+  });
 
   return (
     <AdminLayout locale={locale}>

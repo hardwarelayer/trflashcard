@@ -1640,6 +1640,278 @@ User quyết định đổi từ Netlify sang Vercel cho toàn bộ trflashcard
 
 ---
 
+## 🚨 **Vấn đề 47: Refine Update Breaking Changes**
+
+### ❌ **Lỗi gặp phải:**
+```
+Failed to compile.
+./src/app/[locale]/cards/edit/[id]/page.tsx:20:39
+Type error: Property 'queryResult' does not exist on type 'UseFormReturnType<BaseRecord, HttpError, {}, BaseRecord, BaseRecord, HttpError>'.
+```
+
+### 🔍 **Nguyên nhân:**
+- **Refine Update**: Packages đã được update lên version mới
+- **API Changes**: `useForm` hook không còn trả về `queryResult`
+- **Breaking Changes**: Refine đã thay đổi API structure
+- **Migration Required**: Cần update code để tương thích
+
+### ✅ **Cách xử lý:**
+1. **Tách riêng data fetching:**
+   ```typescript
+   // TRƯỚC
+   const { formProps, saveButtonProps, queryResult } = useForm({
+     resource: "demo_card",
+     id: id,
+     redirect: "list"
+   });
+   const cardData = queryResult?.data?.data;
+
+   // SAU
+   const { formProps, saveButtonProps } = useForm({
+     resource: "demo_card",
+     id: id,
+     redirect: "list"
+   });
+   const { data: cardData } = useOne({
+     resource: "demo_card",
+     id: id
+   });
+   ```
+
+2. **Import useOne hook:**
+   ```typescript
+   import { Edit, useForm, useOne } from "@refinedev/antd";
+   ```
+
+3. **Files đã sửa:**
+   - `src/app/[locale]/cards/edit/[id]/page.tsx`
+   - `src/app/[locale]/members/edit/[id]/page.tsx`
+   - `src/app/[locale]/cards/show/[id]/page.tsx`
+   - `src/app/[locale]/members/show/[id]/page.tsx`
+
+### 📝 **Kết quả:**
+- ✅ **Build successful** - Không còn TypeScript errors
+- ✅ **API compatibility** - Code tương thích với Refine mới
+- ✅ **Functionality preserved** - Chức năng vẫn hoạt động đúng
+- ✅ **Best practices** - Sử dụng hooks riêng biệt cho data fetching
+
+### 🎯 **Bài học rút ra:**
+1. **Refine Updates**: Cần kiểm tra breaking changes khi update
+2. **API Changes**: `useForm` không còn trả về `queryResult`
+3. **Separation of Concerns**: Tách riêng form logic và data fetching
+4. **Migration Strategy**: Sử dụng `useOne` hook riêng biệt
+5. **Testing**: Luôn test build sau khi update packages
+
+---
+
+## 🚨 **Vấn đề 48: Next.js Prerendering Errors**
+
+### ❌ **Lỗi gặp phải:**
+```
+Error occurred prerendering page "/en/hello"
+Error occurred prerendering page "/vi/test-dashboard"
+```
+
+### 🔍 **Nguyên nhân:**
+- **useTranslations Hook**: Không hoạt động trong static generation
+- **Client Components**: `"use client"` directive gây conflict với prerendering
+- **Next.js 15**: Yêu cầu server-side translations cho static generation
+- **i18n Prerendering**: Client-side hooks không tương thích với SSG
+
+### ✅ **Cách xử lý:**
+1. **Chuyển sang Server Components:**
+   ```typescript
+   // TRƯỚC
+   "use client";
+   import { useTranslations } from 'next-intl';
+   
+   export default function HelloPage() {
+     const t = useTranslations('dashboard');
+     // ...
+   }
+
+   // SAU
+   import { getTranslations } from 'next-intl/server';
+   
+   export default async function HelloPage({ params }: HelloPageProps) {
+     const { locale } = await params;
+     const t = await getTranslations({ locale, namespace: 'dashboard' });
+     // ...
+   }
+   ```
+
+2. **Files đã sửa:**
+   - `src/app/[locale]/hello/page.tsx`
+   - `src/app/[locale]/test-dashboard/page.tsx`
+
+3. **Async Function**: Page components là async functions
+4. **Params Handling**: Proper handling của `params` Promise
+
+### 📝 **Kết quả:**
+- ✅ **Prerendering Success** - Static generation hoạt động
+- ✅ **Server-side Translations** - getTranslations hoạt động tốt
+- ✅ **Next.js 15 Compatibility** - Tương thích với App Router
+- ✅ **Build Success** - Không còn prerendering errors
+
+### 🎯 **Bài học rút ra:**
+1. **Server vs Client**: Sử dụng server components cho static generation
+2. **i18n Strategy**: getTranslations cho SSR/SSG, useTranslations cho client
+3. **Next.js 15**: Yêu cầu proper async handling
+4. **Prerendering**: Client hooks không hoạt động trong static generation
+5. **Performance**: Server-side translations tốt hơn cho SEO
+
+---
+
+## 🚨 **Vấn đề 49: Missing Translation Keys**
+
+### ❌ **Lỗi gặp phải:**
+```
+Error: MISSING_MESSAGE: dashboard.members (en)
+Error: MISSING_MESSAGE: dashboard.cards (en)
+Error: MISSING_MESSAGE: dashboard.members (vi)
+Error: MISSING_MESSAGE: dashboard.cards (vi)
+```
+
+### 🔍 **Nguyên nhân:**
+- **Wrong Namespace**: Sử dụng `t('members')` và `t('cards')` trong dashboard namespace
+- **Translation Structure**: Keys `members` và `cards` nằm trong `navigation` namespace
+- **Missing Keys**: Dashboard namespace không có keys `members` và `cards`
+- **Build Warnings**: Translation errors không ảnh hưởng build nhưng gây warning
+
+### ✅ **Cách xử lý:**
+1. **Sửa Translation Keys:**
+   ```typescript
+   // TRƯỚC - Wrong keys
+   <li>Members: {t('members')}</li>
+   <li>Cards: {t('cards')}</li>
+
+   // SAU - Correct keys
+   <li>Recent Members: {t('recentMembers')}</li>
+   <li>Recent Cards: {t('recentCards')}</li>
+   ```
+
+2. **Files đã sửa:**
+   - `src/app/[locale]/test-dashboard/page.tsx`
+
+3. **Translation Structure:**
+   ```json
+   {
+     "dashboard": {
+       "title": "Dashboard",
+       "totalMembers": "Total Members",
+       "totalCards": "Total Cards",
+       "recentMembers": "Recent Members",  // ✅ Correct key
+       "recentCards": "Recent Cards"        // ✅ Correct key
+     },
+     "navigation": {
+       "members": "Members",  // ❌ Wrong namespace
+       "cards": "Cards"       // ❌ Wrong namespace
+     }
+   }
+   ```
+
+### 📝 **Kết quả:**
+- ✅ **Build Success** - Không còn translation errors
+- ✅ **Clean Console** - Không còn missing message warnings
+- ✅ **Proper i18n** - Sử dụng đúng translation keys
+- ✅ **Production Ready** - Build hoàn toàn clean
+
+### 🎯 **Bài học rút ra:**
+1. **Namespace Structure**: Kiểm tra cấu trúc translation files
+2. **Key Mapping**: Đảm bảo keys tồn tại trong đúng namespace
+3. **Translation Testing**: Test translations trong development
+4. **Build Warnings**: Không bỏ qua translation warnings
+5. **i18n Best Practices**: Sử dụng consistent key naming
+
+---
+
+## 🎉 **TỔNG KẾT: BUILD SUCCESS COMPLETE**
+
+### **📅 Timeline:**
+- **Package Updates**: Next.js 15, Refine, Ant Design
+- **Build Process**: Multiple iterations với error fixes
+- **Final Result**: Clean production build ✅
+
+### **🔧 Major Issues Resolved:**
+
+#### **1. Refine Framework Updates**
+- **useForm API Changes**: Removed `queryResult`, separated data fetching
+- **useOne Hook**: Import from `@refinedev/core`, proper destructuring
+- **DataProvider**: Generic types compatibility với `BaseRecord`
+- **Files Fixed**: 6 files (edit/show pages cho cards và members)
+
+#### **2. Next.js 15 Compatibility**
+- **Config Migration**: `serverComponentsExternalPackages` → `serverExternalPackages`
+- **Prerendering**: Client components → Server components cho static generation
+- **i18n Strategy**: `useTranslations` → `getTranslations` cho SSR/SSG
+
+#### **3. TypeScript & ESLint**
+- **JWT Library**: `SignOptions` type assertion cho `jwt.sign()`
+- **Link Components**: `<a>` → `<Link>` từ `next/link`
+- **Import Paths**: Corrected `useOne` import sources
+
+#### **4. Translation System**
+- **Missing Keys**: Fixed `dashboard.members` và `dashboard.cards` errors
+- **Namespace Structure**: Proper key mapping trong translation files
+- **Server-side**: `getTranslations` cho static generation
+
+### **📊 Final Build Statistics:**
+```
+✓ Compiled successfully in 13.9s
+✓ Linting and checking validity of types  
+✓ Collecting page data
+✓ Generating static pages (35/35)
+✓ Finalizing page optimization
+```
+
+### **🚀 Production Ready Features:**
+- ✅ **Next.js 15** - Latest framework version
+- ✅ **Refine Framework** - Updated admin panel
+- ✅ **Ant Design 5** - Modern UI components
+- ✅ **TypeScript** - Full type safety
+- ✅ **i18n Support** - Vietnamese & English
+- ✅ **API Endpoints** - 8 working endpoints
+- ✅ **Authentication** - JWT system
+- ✅ **Database** - Supabase integration
+- ✅ **Vercel Ready** - Deployment configuration
+
+### **📈 Project Progress:**
+- **Phase 1-4**: 100% Complete ✅
+- **Phase 5**: 90% Complete (Build Success) ✅
+- **Overall**: 82% Complete (4.9/6 Phases)
+
+### **🎯 Next Steps:**
+1. **Production Testing** - API endpoints & i18n routing
+2. **Vercel Deployment** - Live production environment
+3. **Phase 6** - i18n Enhancement (optional)
+
+### **💡 Key Learnings:**
+1. **Package Updates**: Always check breaking changes
+2. **Build Process**: Iterative debugging approach
+3. **TypeScript**: Generic types và interface compatibility
+4. **Next.js 15**: Server vs Client component strategy
+5. **i18n**: Server-side translations cho static generation
+6. **Refine**: Hook API evolution và migration patterns
+
+**🎉 BUILD SUCCESS - PRODUCTION READY! 🚀**
+
+### 📝 **Cache Clearing Commands:**
+```powershell
+# Windows PowerShell
+Remove-Item -Recurse -Force .next
+Remove-Item -Recurse -Force node_modules\.cache
+npm run build
+```
+
+```bash
+# Linux/Mac
+rm -rf .next
+rm -rf node_modules/.cache
+npm run build
+```
+
+---
+
 ## 🚨 **Vấn đề 45: Card API Testing Success**
 
 ### ✅ **Testing hoàn thành:**
@@ -1825,6 +2097,278 @@ User quyết định đổi từ Netlify sang Vercel cho toàn bộ trflashcard
 - ✅ **Environment Setup** - Production template
 - ✅ **Deployment Guide** - Step-by-step instructions
 - ✅ **Phase 5 tiến độ** - 75% (Vercel Migration)
+
+---
+
+## 🚨 **Vấn đề 47: Refine Update Breaking Changes**
+
+### ❌ **Lỗi gặp phải:**
+```
+Failed to compile.
+./src/app/[locale]/cards/edit/[id]/page.tsx:20:39
+Type error: Property 'queryResult' does not exist on type 'UseFormReturnType<BaseRecord, HttpError, {}, BaseRecord, BaseRecord, HttpError>'.
+```
+
+### 🔍 **Nguyên nhân:**
+- **Refine Update**: Packages đã được update lên version mới
+- **API Changes**: `useForm` hook không còn trả về `queryResult`
+- **Breaking Changes**: Refine đã thay đổi API structure
+- **Migration Required**: Cần update code để tương thích
+
+### ✅ **Cách xử lý:**
+1. **Tách riêng data fetching:**
+   ```typescript
+   // TRƯỚC
+   const { formProps, saveButtonProps, queryResult } = useForm({
+     resource: "demo_card",
+     id: id,
+     redirect: "list"
+   });
+   const cardData = queryResult?.data?.data;
+
+   // SAU
+   const { formProps, saveButtonProps } = useForm({
+     resource: "demo_card",
+     id: id,
+     redirect: "list"
+   });
+   const { data: cardData } = useOne({
+     resource: "demo_card",
+     id: id
+   });
+   ```
+
+2. **Import useOne hook:**
+   ```typescript
+   import { Edit, useForm, useOne } from "@refinedev/antd";
+   ```
+
+3. **Files đã sửa:**
+   - `src/app/[locale]/cards/edit/[id]/page.tsx`
+   - `src/app/[locale]/members/edit/[id]/page.tsx`
+   - `src/app/[locale]/cards/show/[id]/page.tsx`
+   - `src/app/[locale]/members/show/[id]/page.tsx`
+
+### 📝 **Kết quả:**
+- ✅ **Build successful** - Không còn TypeScript errors
+- ✅ **API compatibility** - Code tương thích với Refine mới
+- ✅ **Functionality preserved** - Chức năng vẫn hoạt động đúng
+- ✅ **Best practices** - Sử dụng hooks riêng biệt cho data fetching
+
+### 🎯 **Bài học rút ra:**
+1. **Refine Updates**: Cần kiểm tra breaking changes khi update
+2. **API Changes**: `useForm` không còn trả về `queryResult`
+3. **Separation of Concerns**: Tách riêng form logic và data fetching
+4. **Migration Strategy**: Sử dụng `useOne` hook riêng biệt
+5. **Testing**: Luôn test build sau khi update packages
+
+---
+
+## 🚨 **Vấn đề 48: Next.js Prerendering Errors**
+
+### ❌ **Lỗi gặp phải:**
+```
+Error occurred prerendering page "/en/hello"
+Error occurred prerendering page "/vi/test-dashboard"
+```
+
+### 🔍 **Nguyên nhân:**
+- **useTranslations Hook**: Không hoạt động trong static generation
+- **Client Components**: `"use client"` directive gây conflict với prerendering
+- **Next.js 15**: Yêu cầu server-side translations cho static generation
+- **i18n Prerendering**: Client-side hooks không tương thích với SSG
+
+### ✅ **Cách xử lý:**
+1. **Chuyển sang Server Components:**
+   ```typescript
+   // TRƯỚC
+   "use client";
+   import { useTranslations } from 'next-intl';
+   
+   export default function HelloPage() {
+     const t = useTranslations('dashboard');
+     // ...
+   }
+
+   // SAU
+   import { getTranslations } from 'next-intl/server';
+   
+   export default async function HelloPage({ params }: HelloPageProps) {
+     const { locale } = await params;
+     const t = await getTranslations({ locale, namespace: 'dashboard' });
+     // ...
+   }
+   ```
+
+2. **Files đã sửa:**
+   - `src/app/[locale]/hello/page.tsx`
+   - `src/app/[locale]/test-dashboard/page.tsx`
+
+3. **Async Function**: Page components là async functions
+4. **Params Handling**: Proper handling của `params` Promise
+
+### 📝 **Kết quả:**
+- ✅ **Prerendering Success** - Static generation hoạt động
+- ✅ **Server-side Translations** - getTranslations hoạt động tốt
+- ✅ **Next.js 15 Compatibility** - Tương thích với App Router
+- ✅ **Build Success** - Không còn prerendering errors
+
+### 🎯 **Bài học rút ra:**
+1. **Server vs Client**: Sử dụng server components cho static generation
+2. **i18n Strategy**: getTranslations cho SSR/SSG, useTranslations cho client
+3. **Next.js 15**: Yêu cầu proper async handling
+4. **Prerendering**: Client hooks không hoạt động trong static generation
+5. **Performance**: Server-side translations tốt hơn cho SEO
+
+---
+
+## 🚨 **Vấn đề 49: Missing Translation Keys**
+
+### ❌ **Lỗi gặp phải:**
+```
+Error: MISSING_MESSAGE: dashboard.members (en)
+Error: MISSING_MESSAGE: dashboard.cards (en)
+Error: MISSING_MESSAGE: dashboard.members (vi)
+Error: MISSING_MESSAGE: dashboard.cards (vi)
+```
+
+### 🔍 **Nguyên nhân:**
+- **Wrong Namespace**: Sử dụng `t('members')` và `t('cards')` trong dashboard namespace
+- **Translation Structure**: Keys `members` và `cards` nằm trong `navigation` namespace
+- **Missing Keys**: Dashboard namespace không có keys `members` và `cards`
+- **Build Warnings**: Translation errors không ảnh hưởng build nhưng gây warning
+
+### ✅ **Cách xử lý:**
+1. **Sửa Translation Keys:**
+   ```typescript
+   // TRƯỚC - Wrong keys
+   <li>Members: {t('members')}</li>
+   <li>Cards: {t('cards')}</li>
+
+   // SAU - Correct keys
+   <li>Recent Members: {t('recentMembers')}</li>
+   <li>Recent Cards: {t('recentCards')}</li>
+   ```
+
+2. **Files đã sửa:**
+   - `src/app/[locale]/test-dashboard/page.tsx`
+
+3. **Translation Structure:**
+   ```json
+   {
+     "dashboard": {
+       "title": "Dashboard",
+       "totalMembers": "Total Members",
+       "totalCards": "Total Cards",
+       "recentMembers": "Recent Members",  // ✅ Correct key
+       "recentCards": "Recent Cards"        // ✅ Correct key
+     },
+     "navigation": {
+       "members": "Members",  // ❌ Wrong namespace
+       "cards": "Cards"       // ❌ Wrong namespace
+     }
+   }
+   ```
+
+### 📝 **Kết quả:**
+- ✅ **Build Success** - Không còn translation errors
+- ✅ **Clean Console** - Không còn missing message warnings
+- ✅ **Proper i18n** - Sử dụng đúng translation keys
+- ✅ **Production Ready** - Build hoàn toàn clean
+
+### 🎯 **Bài học rút ra:**
+1. **Namespace Structure**: Kiểm tra cấu trúc translation files
+2. **Key Mapping**: Đảm bảo keys tồn tại trong đúng namespace
+3. **Translation Testing**: Test translations trong development
+4. **Build Warnings**: Không bỏ qua translation warnings
+5. **i18n Best Practices**: Sử dụng consistent key naming
+
+---
+
+## 🎉 **TỔNG KẾT: BUILD SUCCESS COMPLETE**
+
+### **📅 Timeline:**
+- **Package Updates**: Next.js 15, Refine, Ant Design
+- **Build Process**: Multiple iterations với error fixes
+- **Final Result**: Clean production build ✅
+
+### **🔧 Major Issues Resolved:**
+
+#### **1. Refine Framework Updates**
+- **useForm API Changes**: Removed `queryResult`, separated data fetching
+- **useOne Hook**: Import from `@refinedev/core`, proper destructuring
+- **DataProvider**: Generic types compatibility với `BaseRecord`
+- **Files Fixed**: 6 files (edit/show pages cho cards và members)
+
+#### **2. Next.js 15 Compatibility**
+- **Config Migration**: `serverComponentsExternalPackages` → `serverExternalPackages`
+- **Prerendering**: Client components → Server components cho static generation
+- **i18n Strategy**: `useTranslations` → `getTranslations` cho SSR/SSG
+
+#### **3. TypeScript & ESLint**
+- **JWT Library**: `SignOptions` type assertion cho `jwt.sign()`
+- **Link Components**: `<a>` → `<Link>` từ `next/link`
+- **Import Paths**: Corrected `useOne` import sources
+
+#### **4. Translation System**
+- **Missing Keys**: Fixed `dashboard.members` và `dashboard.cards` errors
+- **Namespace Structure**: Proper key mapping trong translation files
+- **Server-side**: `getTranslations` cho static generation
+
+### **📊 Final Build Statistics:**
+```
+✓ Compiled successfully in 13.9s
+✓ Linting and checking validity of types  
+✓ Collecting page data
+✓ Generating static pages (35/35)
+✓ Finalizing page optimization
+```
+
+### **🚀 Production Ready Features:**
+- ✅ **Next.js 15** - Latest framework version
+- ✅ **Refine Framework** - Updated admin panel
+- ✅ **Ant Design 5** - Modern UI components
+- ✅ **TypeScript** - Full type safety
+- ✅ **i18n Support** - Vietnamese & English
+- ✅ **API Endpoints** - 8 working endpoints
+- ✅ **Authentication** - JWT system
+- ✅ **Database** - Supabase integration
+- ✅ **Vercel Ready** - Deployment configuration
+
+### **📈 Project Progress:**
+- **Phase 1-4**: 100% Complete ✅
+- **Phase 5**: 90% Complete (Build Success) ✅
+- **Overall**: 82% Complete (4.9/6 Phases)
+
+### **🎯 Next Steps:**
+1. **Production Testing** - API endpoints & i18n routing
+2. **Vercel Deployment** - Live production environment
+3. **Phase 6** - i18n Enhancement (optional)
+
+### **💡 Key Learnings:**
+1. **Package Updates**: Always check breaking changes
+2. **Build Process**: Iterative debugging approach
+3. **TypeScript**: Generic types và interface compatibility
+4. **Next.js 15**: Server vs Client component strategy
+5. **i18n**: Server-side translations cho static generation
+6. **Refine**: Hook API evolution và migration patterns
+
+**🎉 BUILD SUCCESS - PRODUCTION READY! 🚀**
+
+### 📝 **Cache Clearing Commands:**
+```powershell
+# Windows PowerShell
+Remove-Item -Recurse -Force .next
+Remove-Item -Recurse -Force node_modules\.cache
+npm run build
+```
+
+```bash
+# Linux/Mac
+rm -rf .next
+rm -rf node_modules/.cache
+npm run build
+```
 
 ---
 

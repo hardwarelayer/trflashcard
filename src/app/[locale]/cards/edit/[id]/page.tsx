@@ -1,6 +1,7 @@
 "use client";
 
 import { Edit, useForm } from "@refinedev/antd";
+import { useOne } from "@refinedev/core";
 import { Form, Input, Select } from "antd";
 import AdminLayout from "@/components/layout/admin-layout";
 import { use } from "react";
@@ -17,13 +18,16 @@ interface EditCardPageProps {
 export default function EditCardPage({ params }: EditCardPageProps) {
   const { locale, id } = use(params);
   
-  const { formProps, saveButtonProps, queryResult } = useForm({
+  const { formProps, saveButtonProps } = useForm({
     resource: "demo_card",
     id: id,
     redirect: "list"
   });
 
-  const cardData = queryResult?.data?.data;
+  const { result: cardData } = useOne({
+    resource: "demo_card",
+    id: id
+  });
 
   // Sử dụng direct Supabase client thay vì Refine hooks
   const [membersData, setMembersData] = useState<any[]>([]);

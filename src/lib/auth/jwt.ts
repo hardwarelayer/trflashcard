@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
 // JWT Configuration
@@ -39,11 +39,11 @@ export async function generateTokens(memberId: string, username: string): Promis
 
   const accessToken = jwt.sign(accessPayload, JWT_SECRET, {
     expiresIn: JWT_EXPIRES_IN
-  });
+  } as SignOptions);
 
   const refreshToken = jwt.sign(refreshPayload, JWT_SECRET, {
     expiresIn: JWT_REFRESH_EXPIRES_IN
-  });
+  } as SignOptions);
 
   // Calculate expires in seconds
   const expiresIn = 3600; // 1 hour in seconds

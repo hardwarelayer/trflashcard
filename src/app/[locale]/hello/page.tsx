@@ -1,9 +1,12 @@
-"use client";
+import { getTranslations } from 'next-intl/server';
 
-import { useTranslations } from 'next-intl';
+interface HelloPageProps {
+  params: Promise<{ locale: string }>;
+}
 
-export default function HelloPage() {
-  const t = useTranslations('dashboard');
+export default async function HelloPage({ params }: HelloPageProps) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'dashboard' });
   
   return (
     <div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { dataProvider as dataProviderSupabase } from "@refinedev/supabase";
+import { BaseRecord } from "@refinedev/core";
 import { supabaseBrowserClient } from "../../../lib/supabase/client";
 import bcrypt from "bcryptjs";
 
@@ -9,14 +10,16 @@ const baseDataProvider = dataProviderSupabase(supabaseBrowserClient);
 
 export const dataProvider = {
   ...baseDataProvider,
-  create: async ({ resource, variables, meta }) => {
+  create: async <TData extends BaseRecord = BaseRecord, TVariables = {}>(params: any) => {
+    const { resource, variables, meta } = params;
     // Hash password cho demo_member
     if (resource === "demo_member" && variables?.password) {
       variables.password = await bcrypt.hash(variables.password, 10);
     }
-    return baseDataProvider.create({ resource, variables, meta });
+    return baseDataProvider.create<TData, TVariables>(params);
   },
-  update: async ({ resource, id, variables, meta }) => {
+  update: async <TData extends BaseRecord = BaseRecord, TVariables = {}>(params: any) => {
+    const { resource, id, variables, meta } = params;
     // Hash password cho demo_member nếu có thay đổi
     if (resource === "demo_member") {
       if (variables?.new_password && variables.new_password.trim() !== '') {
@@ -29,7 +32,7 @@ export const dataProvider = {
         delete variables.new_password;
       }
     }
-    return baseDataProvider.update({ resource, id, variables, meta });
+    return baseDataProvider.update<TData, TVariables>(params);
   },
   getList: baseDataProvider.getList,
   getOne: baseDataProvider.getOne,

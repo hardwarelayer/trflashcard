@@ -43,7 +43,9 @@ export default function RefineWrapper({ children, locale = 'vi' }: RefineWrapper
               <Refine
                 routerProvider={routerProvider}
                 authProvider={authProvider}
-                dataProvider={dataProvider}
+                dataProvider={{
+                  default: dataProvider
+                }}
                 notificationProvider={useNotificationProvider}
                 resources={[
                   {

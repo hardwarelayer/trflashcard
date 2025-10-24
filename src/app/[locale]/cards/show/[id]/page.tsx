@@ -19,10 +19,12 @@ interface ShowCardPageProps {
 export default function ShowCardPage({ params }: ShowCardPageProps) {
   const { locale, id } = use(params);
   
-  const { data, isLoading } = useOne({
+  const { result: data, query } = useOne({
     resource: "demo_card",
     id: id
   });
+  
+  const isLoading = query.isLoading;
 
   const record = data?.data;
 

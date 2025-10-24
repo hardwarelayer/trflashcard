@@ -122,6 +122,30 @@ vercel --prod
    - Check environment variables
    ```
 
+2. **Cache Issues (Windows PowerShell)**
+   ```powershell
+   # Clear Next.js cache
+   Remove-Item -Recurse -Force .next
+   
+   # Clear node_modules cache (optional)
+   Remove-Item -Recurse -Force node_modules\.cache
+   
+   # Build lại
+   npm run build
+   ```
+
+3. **Cache Issues (Linux/Mac)**
+   ```bash
+   # Clear Next.js cache
+   rm -rf .next
+   
+   # Clear node_modules cache (optional)
+   rm -rf node_modules/.cache
+   
+   # Build lại
+   npm run build
+   ```
+
 2. **API Routes Not Working**
    ```bash
    # Check function logs
