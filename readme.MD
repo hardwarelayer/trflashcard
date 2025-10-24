@@ -254,6 +254,25 @@ npm run build
 - **Phase 5**: Deployment (5% - Production testing)
 - **Phase 6**: i18n Enhancement (Kế hoạch)
 
+---
+
+## ⚠️ **Compatibility Notes**
+
+### **React 19 vs Ant Design v5 Compatibility**
+- **Next.js 15**: Sử dụng React 19 internally
+- **Ant Design v5**: Chỉ support React 16-18
+- **Current Status**: Chấp nhận hiện trạng compatibility
+- **Warning Suppression**: Đã implement safe warning suppression
+- **Reason**: Tránh gặp các vấn đề lớn hơn khi nâng cấp lên React 19
+
+### **Technical Decision:**
+- **Stable Stack**: Giữ nguyên React 18 + Ant Design 5.23
+- **Warning Management**: Suppress compatibility warnings
+- **No Breaking Changes**: Không thay đổi package versions
+- **Future Planning**: Chờ Ant Design support React 19 chính thức
+
+**📚 Detailed Documentation:** [🔧 Compatibility Notes](./docs/compatibility-notes.md)
+
 ### 🎯 **Mục Tiêu Tiếp Theo**
 1. **Phase 5**: Production testing và optimization (5% còn lại)
 2. **Phase 6**: i18n enhancement (Kế hoạch)
@@ -894,5 +913,6 @@ Content-Type: application/json
 - **[🚀 Setup Guide](./SETUP.md)** - Hướng dẫn cài đặt và chạy dự án
 - **[🔐 Authentication Guide](./docs/authentication.md)** - Hướng dẫn authentication
 - **[🔧 Dev Log](./docs/dev-log.md)** - Log các vấn đề đã gặp và cách xử lý
+- **[🔧 Compatibility Notes](./docs/compatibility-notes.md)** - React 19 vs Ant Design v5 compatibility
 - **[🗄️ Database Schema](./ddl/basic.sql)** - Schema database
 - **[📦 Package.json](./package.json)** - Dependencies và scripts

@@ -2,7 +2,7 @@
 
 import { DevtoolsProvider } from "@providers/devtools";
 import { useNotificationProvider } from "@refinedev/antd";
-import { GitHubBanner, Refine } from "@refinedev/core";
+import { Refine } from "@refinedev/core";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 import routerProvider from "@refinedev/nextjs-router";
 import React from "react";
@@ -39,7 +39,6 @@ export default function RefineWrapper({ children, locale = 'vi' }: RefineWrapper
         <AntdRegistry>
           <ColorModeContextProvider defaultMode="light">
             <DevtoolsProvider>
-              <GitHubBanner />
               <Refine
                 routerProvider={routerProvider}
                 authProvider={authProvider}

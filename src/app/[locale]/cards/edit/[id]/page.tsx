@@ -71,7 +71,7 @@ export default function EditCardPage({ params }: EditCardPageProps) {
         title="Chỉnh sửa Card"
         saveButtonProps={saveButtonProps}
       >
-        <Form {...formProps} layout="vertical" form={formProps.form}>
+        <Form {...formProps} layout="vertical">
           <Form.Item
             label="Tiêu đề"
             name="title"

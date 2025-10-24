@@ -63,7 +63,7 @@ export default function CreateCardPage({ params }: CreateCardPageProps) {
         title="Tạo Card mới"
         saveButtonProps={saveButtonProps}
       >
-        <Form {...formProps} layout="vertical" form={formProps.form}>
+        <Form {...formProps} layout="vertical">
           <Form.Item
             label="Tiêu đề"
             name="title"
