@@ -1514,3 +1514,169 @@ git push origin main
 - ✅ **JWT Token System** - Consistent across all endpoints
 - ✅ **API Testing** - All endpoints tested successfully
 - ✅ **Phase 4 tiến độ** - 50% hoàn thành (JWT Auth + Member API)
+
+---
+
+## 🚨 **Vấn đề 43: Card API Implementation**
+
+### ✅ **Implementation hoàn thành:**
+```
+Card API - 5 endpoints implemented:
+├── GET /api/cards - List cards (pagination, search, sort)
+├── GET /api/cards/:id - Get card details
+├── POST /api/cards - Create card
+├── PUT /api/cards/:id - Update card
+└── DELETE /api/cards/:id - Delete card (soft delete)
+```
+
+### 🔐 **Security Features:**
+- **JWT Authentication**: Tất cả endpoints yêu cầu valid token
+- **Member Authorization**: Chỉ access cards của chính member
+- **UUID Validation**: Validate card ID format
+- **Input Validation**: Title/content length limits
+- **Soft Delete**: Không xóa dữ liệu thật
+
+### 📊 **API Features:**
+- **Pagination**: page, limit parameters
+- **Search**: title/content với ILIKE
+- **Sorting**: created_at, updated_at
+- **Filtering**: member_id từ token
+- **Error Handling**: Comprehensive error responses
+
+### 🎯 **Kết quả cuối cùng:**
+- ✅ **Card API hoàn thành** - Full CRUD operations
+- ✅ **Security** - JWT auth + member authorization
+- ✅ **Features** - Pagination, search, sort
+- ✅ **Data integrity** - Soft delete + validation
+- ✅ **UUID Management** - Database tự sinh UUID, không cần gửi ID trong POST request
+- ✅ **API Testing** - Tất cả endpoints đã được test thành công
+- ✅ **Phase 4 hoàn thành** - 100% (JWT Auth + Member API + Card API)
+
+---
+
+## 🚨 **Vấn đề 45: Card API Testing Success**
+
+### ✅ **Testing hoàn thành:**
+```
+Card API - 5 endpoints tested successfully:
+├── GET /api/cards - List cards (pagination, search, sort) ✅
+├── GET /api/cards/:id - Get card details ✅
+├── POST /api/cards - Create card ✅
+├── PUT /api/cards/:id - Update card ✅
+└── DELETE /api/cards/:id - Delete card (soft delete) ✅
+```
+
+### 🔧 **Issues resolved:**
+- **405 Method Not Allowed**: Fixed by moving POST function to correct route file
+- **URL Structure**: POST /api/cards now works correctly
+- **UUID Management**: Database tự sinh UUID, không cần gửi ID trong POST request
+
+### 📊 **Testing Results:**
+- ✅ **Authentication**: JWT tokens work correctly
+- ✅ **Authorization**: Member chỉ access cards của chính mình
+- ✅ **CRUD Operations**: Create, Read, Update, Delete all working
+- ✅ **Pagination**: Page, limit, search, sort parameters working
+- ✅ **Validation**: Input validation and error handling working
+- ✅ **Soft Delete**: Delete operation preserves data integrity
+
+---
+
+## 🚨 **Vấn đề 44: UUID Management trong Card API**
+
+### ❌ **Vấn đề gặp phải:**
+```
+User hỏi về việc POST UUID lên database có vẻ không ổn
+vì UUID là tự sinh trên database
+```
+
+### 🔍 **Nguyên nhân:**
+- **API Design**: POST request không nên yêu cầu UUID
+- **Database Schema**: UUID được tự sinh bởi `uuid_generate_v4()`
+- **Best Practice**: Client không nên gửi ID trong create request
+- **Documentation**: Cần rõ ràng về việc UUID được tự sinh
+
+### ✅ **Cách xử lý:**
+1. **Sửa lại API documentation:**
+   ```http
+   POST /api/cards
+   Authorization: Bearer <access_token>
+   Content-Type: application/json
+   
+   {
+     "title": "New Card",
+     "content": "This is a new card content"
+   }
+   ```
+
+2. **Response chứa ID được tự sinh:**
+   ```json
+   {
+     "success": true,
+     "data": {
+       "card": {
+         "id": "uuid-tự-sinh-từ-database",
+         "title": "New Card",
+         "content": "This is a new card content",
+         "member_id": "member-uuid-từ-token",
+         "created_at": "2025-10-22T11:00:00Z",
+         "updated_at": "2025-10-22T11:00:00Z"
+       }
+     }
+   }
+   ```
+
+3. **Cập nhật documentation:**
+   - Rõ ràng về việc UUID được tự sinh từ database
+   - Không cần gửi ID trong POST request
+   - Client nhận ID từ response để sử dụng cho các operations khác
+
+### 📝 **Kết quả:**
+- ✅ **API Design** đúng best practice
+- ✅ **UUID Management** rõ ràng
+- ✅ **Documentation** cập nhật chính xác
+- ✅ **Client Flow** rõ ràng: Create → Get ID → Use ID for other operations
+
+### 🎯 **Bài học rút ra:**
+1. **API Design**: POST request không nên yêu cầu ID
+2. **Database Schema**: UUID được tự sinh bởi database
+3. **Documentation**: Cần rõ ràng về việc ID được tự sinh
+4. **Client Flow**: Create → Get ID → Use ID for other operations
+5. **Best Practice**: Follow REST API conventions
+
+---
+
+## 🎯 **Kết quả cuối cùng:**
+- ✅ **Card API hoàn thành** - Full CRUD operations
+- ✅ **Security** - JWT auth + member authorization
+- ✅ **Features** - Pagination, search, sort
+- ✅ **Data integrity** - Soft delete + validation
+- ✅ **UUID Management** - Database tự sinh UUID, không cần gửi ID trong POST request
+- ✅ **API Testing** - Tất cả endpoints đã được test thành công
+- ✅ **Phase 4 hoàn thành** - 100% (JWT Auth + Member API + Card API)
+
+---
+
+## 🚨 **Vấn đề 45: Card API Testing Success**
+
+### ✅ **Testing hoàn thành:**
+```
+Card API - 5 endpoints tested successfully:
+├── GET /api/cards - List cards (pagination, search, sort) ✅
+├── GET /api/cards/:id - Get card details ✅
+├── POST /api/cards - Create card ✅
+├── PUT /api/cards/:id - Update card ✅
+└── DELETE /api/cards/:id - Delete card (soft delete) ✅
+```
+
+### 🔧 **Issues resolved:**
+- **405 Method Not Allowed**: Fixed by moving POST function to correct route file
+- **URL Structure**: POST /api/cards now works correctly
+- **UUID Management**: Database tự sinh UUID, không cần gửi ID trong POST request
+
+### 📊 **Testing Results:**
+- ✅ **Authentication**: JWT tokens work correctly
+- ✅ **Authorization**: Member chỉ access cards của chính mình
+- ✅ **CRUD Operations**: Create, Read, Update, Delete all working
+- ✅ **Pagination**: Page, limit, search, sort parameters working
+- ✅ **Validation**: Input validation and error handling working
+- ✅ **Soft Delete**: Delete operation preserves data integrity

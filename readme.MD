@@ -201,7 +201,7 @@ npm run build
 
 ### 📋 **Kế hoạch**
 
-#### 🔌 **Phase 4: API endpoints** *(Tiến độ: 50% - JWT Auth + Member API)*
+#### 🔌 **Phase 4: API endpoints** *(Tiến độ: 100% - Hoàn thành)*
 - [x] **JWT API** - Authentication cho mobile app ✅
   - [x] `POST /api/auth/login` - Member login với JWT tokens
   - [x] `POST /api/auth/logout` - Token invalidation
@@ -209,13 +209,13 @@ npm run build
 - [x] **Member API** - Mobile app operations (2 endpoints) ✅
   - [x] `POST /api/members/register` - Đăng ký member mới (unique username)
   - [x] `POST /api/members/change-password` - Đổi mật khẩu cho member
-- [ ] **Card API** - CRUD cho mobile app (5 endpoints)
-  - [ ] `GET /api/cards` - List cards của member
-  - [ ] `GET /api/cards/:id` - Get card details
-  - [ ] `POST /api/cards` - Create card
-  - [ ] `PUT /api/cards/:id` - Update card
-  - [ ] `DELETE /api/cards/:id` - Delete card
-- [ ] **Error handling** - Consistent error responses
+- [x] **Card API** - CRUD cho mobile app (5 endpoints) ✅
+  - [x] `GET /api/cards` - List cards của member (pagination, search, sort)
+  - [x] `GET /api/cards/:id` - Get card details
+  - [x] `POST /api/cards` - Create card
+  - [x] `PUT /api/cards/:id` - Update card
+  - [x] `DELETE /api/cards/:id` - Delete card (soft delete)
+- [x] **Error handling** - Consistent error responses ✅
 
 #### 🚀 **Phase 5: Deployment** *(Kế hoạch)*
 - [ ] **Supabase production setup** - Database và authentication
@@ -234,23 +234,19 @@ npm run build
 
 ## 📊 **Tổng Kết Tiến Độ Dự Án**
 
-### ✅ **Đã Hoàn Thành (3.5/6 Phases - 58%)**
+### ✅ **Đã Hoàn Thành (4/6 Phases - 67%)**
 - **Phase 1**: Cấu trúc cơ bản ✅ (100%)
 - **Phase 2**: Database & Authentication ✅ (100%)  
 - **Phase 3**: CRUD Pages & Navigation ✅ (100%)
-- **Phase 4**: API Endpoints ⚠️ (50% - JWT Auth + Member API)
+- **Phase 4**: API Endpoints ✅ (100% - JWT Auth + Member API + Card API)
 
-### 📋 **Còn Lại (2.5/6 Phases - 42%)**
-- **Phase 4**: API Endpoints (50% còn lại)
-  - Card API (5 endpoints): Full CRUD cho mobile app
-  - Error handling: Consistent error responses
+### 📋 **Còn Lại (2/6 Phases - 33%)**
 - **Phase 5**: Deployment (Kế hoạch)
 - **Phase 6**: i18n Enhancement (Kế hoạch)
 
 ### 🎯 **Mục Tiêu Tiếp Theo**
-1. **Hoàn thành Phase 4**: Implement Card API + Error handling
-2. **Phase 5**: Production deployment
-3. **Phase 6**: i18n enhancement
+1. **Phase 5**: Production deployment
+2. **Phase 6**: i18n enhancement
 
 ---
 
@@ -622,6 +618,211 @@ trflashcard/
 - ✅ **Token interoperability**: Register → Change password flow
 - ✅ **Error handling**: Comprehensive error responses
 - ✅ **Security**: Password hashing, token verification
+
+---
+
+### 🗓️ **22/10/2025 - Hoàn thành Card API Implementation**
+
+#### ✅ **Card API Implementation**
+- **List Cards API**: `GET /api/cards` - List cards với pagination, search, sort
+  - JWT authentication required
+  - Filter cards theo member_id từ token
+  - Pagination support (page, limit)
+  - Search by title/content với ILIKE
+  - Sort by created_at, updated_at
+  - Exclude soft deleted cards
+- **Get Card API**: `GET /api/cards/:id` - Get card details
+  - JWT authentication required
+  - UUID validation
+  - Member authorization (chỉ access cards của chính member)
+  - Return full card details
+- **Create Card API**: `POST /api/cards` - Create card
+  - JWT authentication required
+  - Auto-assign member_id từ token
+  - UUID tự sinh từ database (không cần gửi ID)
+  - Title/content validation
+  - Length limits (title: 200 chars, content: 10000 chars)
+- **Update Card API**: `PUT /api/cards/:id` - Update card
+  - JWT authentication required
+  - Member authorization
+  - UUID validation
+  - Title/content validation
+- **Delete Card API**: `DELETE /api/cards/:id` - Delete card
+  - JWT authentication required
+  - Member authorization
+  - Soft delete (deleted_at, deleted_by)
+  - UUID validation
+
+#### ✅ **Security & Features**
+- **JWT Authentication**: Tất cả endpoints yêu cầu valid token
+- **Member Authorization**: Chỉ access cards của chính member
+- **UUID Validation**: Validate card ID format
+- **Input Validation**: Title/content length limits
+- **Soft Delete**: Không xóa dữ liệu thật
+- **Error Handling**: Comprehensive error responses
+
+#### 📊 **Kết quả Card API**
+- ✅ **Full CRUD operations**: Create, Read, Update, Delete
+- ✅ **Pagination & Search**: Advanced filtering capabilities
+- ✅ **Security**: JWT auth + member authorization
+- ✅ **Data integrity**: Soft delete + validation
+- ✅ **Error handling**: Consistent error responses
+- ✅ **UUID Management**: Database tự sinh UUID, không cần gửi ID trong POST request
+- ✅ **API Testing**: Tất cả endpoints đã được test thành công
+
+#### 🧪 **Hướng dẫn Test Card API**
+
+**1. GET /api/cards - List cards với pagination, search, sort**
+```http
+GET /api/cards?page=1&limit=10&search=test&sort=created_at.desc
+Authorization: Bearer <access_token>
+```
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "cards": [
+      {
+        "id": "550e8400-e29b-41d4-a716-446655440000",
+        "title": "Test Card",
+        "content": "This is a test card",
+        "created_at": "2025-10-22T11:00:00Z",
+        "updated_at": "2025-10-22T11:00:00Z"
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 10,
+      "total": 1,
+      "total_pages": 1,
+      "has_next": false,
+      "has_prev": false
+    }
+  }
+}
+```
+
+**2. GET /api/cards/:id - Get card details**
+```http
+GET /api/cards/550e8400-e29b-41d4-a716-446655440000
+Authorization: Bearer <access_token>
+```
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "card": {
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "title": "Test Card",
+      "content": "This is a test card",
+      "member_id": "member-uuid-from-token",
+      "created_at": "2025-10-22T11:00:00Z",
+      "updated_at": "2025-10-22T11:00:00Z"
+    }
+  }
+}
+```
+
+**3. POST /api/cards - Create card (UUID tự sinh)**
+```http
+POST /api/cards
+Authorization: Bearer <access_token>
+Content-Type: application/json
+
+{
+  "title": "New Card",
+  "content": "This is a new card content"
+}
+```
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "card": {
+      "id": "550e8400-e29b-41d4-a716-446655440001",
+      "title": "New Card",
+      "content": "This is a new card content",
+      "member_id": "member-uuid-from-token",
+      "created_at": "2025-10-22T11:00:00Z",
+      "updated_at": "2025-10-22T11:00:00Z"
+    }
+  }
+}
+```
+
+**4. PUT /api/cards/:id - Update card**
+```http
+PUT /api/cards/550e8400-e29b-41d4-a716-446655440000
+Authorization: Bearer <access_token>
+Content-Type: application/json
+
+{
+  "title": "Updated Card",
+  "content": "This is updated card content"
+}
+```
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "card": {
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "title": "Updated Card",
+      "content": "This is updated card content",
+      "member_id": "member-uuid-from-token",
+      "created_at": "2025-10-22T11:00:00Z",
+      "updated_at": "2025-10-22T11:30:00Z"
+    }
+  }
+}
+```
+
+**5. DELETE /api/cards/:id - Delete card (soft delete)**
+```http
+DELETE /api/cards/550e8400-e29b-41d4-a716-446655440000
+Authorization: Bearer <access_token>
+```
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "message": "Card đã được xóa thành công"
+  }
+}
+```
+
+**🔐 Authentication Flow:**
+```http
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "password123"
+}
+```
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "member": {
+      "id": "member-uuid",
+      "username": "testuser",
+      "full_name": "Test User"
+    },
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "expires_in": 3600,
+    "token_type": "Bearer"
+  }
+}
+```
 
 ---
 
