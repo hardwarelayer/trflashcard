@@ -24,7 +24,7 @@ export default function CreateMemberPage({ params }: CreateMemberPageProps) {
         title="Tạo Member mới"
         saveButtonProps={saveButtonProps}
       >
-      <Form {...formProps} layout="vertical" form={formProps.form}>
+      <Form {...formProps} layout="vertical">
         <Form.Item
           label="Username"
           name="username"
