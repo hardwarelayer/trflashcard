@@ -57,8 +57,8 @@
 ## 🛠️ Technology Stack
 
 - **Framework**: Refine + Next.js + Ant Design + Supabase
-- **Môi trường**: Local development và deploy lên Netlify + Supabase
-- **Tối ưu**: Bundle size (giới hạn free Netlify) và performance
+- **Môi trường**: Local development và deploy lên Vercel + Supabase
+- **Tối ưu**: Bundle size và performance với Vercel optimization
 - **Best Practices**: Development workflow và best practices
 - **Future**: Scalability và technology updates
 
@@ -392,7 +392,7 @@ trflashcard/
 ### 🎯 **Mục tiêu tiếp theo**
 1. **Tạo CRUD pages** cho members và cards
 2. **Tạo API endpoints** cho mobile app
-3. **Deploy lên Netlify**
+3. **Deploy lên Vercel**
 
 ---
 
@@ -430,7 +430,7 @@ trflashcard/
 #### 🎯 **Mục tiêu tiếp theo**
 1. **Tạo CRUD pages** cho members và cards
 2. **Tạo API endpoints** cho mobile app
-3. **Deploy lên Netlify**
+3. **Deploy lên Vercel**
 
 ---
 
@@ -462,7 +462,7 @@ trflashcard/
 #### 🎯 **Mục tiêu tiếp theo**
 1. **Phase 3**: Hoàn thiện CRUD pages và navigation system
 2. **Phase 4**: Tạo API endpoints cho mobile app
-3. **Phase 5**: Deploy lên Netlify
+3. **Phase 5**: Deploy lên Vercel
 
 ---
 
@@ -571,7 +571,7 @@ trflashcard/
 
 #### 🎯 **Mục tiêu tiếp theo**
 1. **Phase 4**: API endpoints cho mobile app
-2. **Phase 5**: Deploy lên Netlify  
+2. **Phase 5**: Deploy lên Vercel  
 3. **Phase 6**: i18n implementation (tách riêng)
 
 ---

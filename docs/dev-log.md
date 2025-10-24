@@ -221,7 +221,7 @@ export default function RootPage() {
 - **Cách phòng tránh:** Chạy `npm run lint` trước khi build
 
 ### 🚨 **Vấn đề 10: Deployment Issues**
-- **Lỗi có thể gặp:** Netlify build fails
+- **Lỗi có thể gặp:** Vercel build fails
 - **Cách phòng tránh:** Kiểm tra build logs và environment variables
 
 ---

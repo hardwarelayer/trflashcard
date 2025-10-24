@@ -219,7 +219,7 @@ npm run lint
 
 1. **Phase 3**: CRUD Pages - Members và Cards management
 2. **Phase 4**: API endpoints - JWT cho mobile app
-3. **Phase 5**: Deployment - Netlify hosting
+3. **Phase 5**: Deployment - Vercel hosting
 
 ---
 
