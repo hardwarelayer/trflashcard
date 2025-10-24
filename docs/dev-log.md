@@ -1554,6 +1554,92 @@ Card API - 5 endpoints implemented:
 
 ---
 
+## 🚨 **Vấn đề 46: Migration từ Netlify sang Vercel**
+
+### 🔄 **Migration Decision:**
+```
+User quyết định đổi từ Netlify sang Vercel cho toàn bộ trflashcard
+```
+
+### 🔍 **Nguyên nhân:**
+- **Netlify Free Limitations**: Không hỗ trợ Docker, giới hạn Functions
+- **Next.js Optimization**: Vercel native support cho Next.js
+- **API Routes**: Full support cho serverless functions
+- **i18n Routing**: Hỗ trợ `/vi/` và `/en/` paths
+- **Free Tier**: Vercel free tier generous hơn
+
+### ✅ **Migration Implementation:**
+1. **Next.js Config Optimization:**
+   ```javascript
+   // next.config.mjs - Vercel optimized
+   const nextConfig = {
+     transpilePackages: ["@refinedev/antd"],
+     experimental: {
+       serverComponentsExternalPackages: ['@supabase/supabase-js']
+     },
+     async redirects() {
+       return [
+         {
+           source: '/',
+           destination: '/vi',
+           permanent: true,
+         },
+       ]
+     },
+   };
+   ```
+
+2. **Vercel Configuration:**
+   ```json
+   // vercel.json - Full configuration
+   {
+     "framework": "nextjs",
+     "functions": {
+       "src/app/api/**/*.ts": {
+         "runtime": "nodejs20.x"
+       }
+     },
+     "rewrites": [
+       {
+         "source": "/api/(.*)",
+         "destination": "/api/$1"
+       }
+     ]
+   }
+   ```
+
+3. **Environment Variables Template:**
+   ```env
+   # env.production - Production template
+   NEXT_PUBLIC_SUPABASE_URL=your_production_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_production_anon_key
+   SUPABASE_SERVICE_ROLE_KEY=your_production_service_role_key
+   JWT_SECRET=your_32_character_production_secret_key_here
+   ```
+
+4. **Deployment Guide:**
+   - **VERCEL_DEPLOYMENT.md** - Chi tiết từng bước
+   - **Environment setup** - Production configuration
+   - **API testing** - Endpoints verification
+   - **i18n routing** - Locale testing
+
+### 📊 **Migration Benefits:**
+- ✅ **Full Next.js Support**: API routes, SSR, i18n
+- ✅ **Free Tier Generous**: 100GB bandwidth, unlimited builds
+- ✅ **Automatic Deployments**: Git integration
+- ✅ **Global CDN**: Fast loading worldwide
+- ✅ **Serverless Functions**: API endpoints hoạt động
+- ✅ **Native Optimization**: Vercel tối ưu cho Next.js
+
+### 🎯 **Kết quả cuối cùng:**
+- ✅ **Vercel Migration** - Complete configuration
+- ✅ **Next.js Optimization** - Vercel-specific config
+- ✅ **Environment Setup** - Production template
+- ✅ **Deployment Guide** - Step-by-step instructions
+- ✅ **Phase 5 tiến độ** - 75% (Vercel Migration)
+
+---
+
 ## 🚨 **Vấn đề 45: Card API Testing Success**
 
 ### ✅ **Testing hoàn thành:**
@@ -1653,6 +1739,92 @@ vì UUID là tự sinh trên database
 - ✅ **UUID Management** - Database tự sinh UUID, không cần gửi ID trong POST request
 - ✅ **API Testing** - Tất cả endpoints đã được test thành công
 - ✅ **Phase 4 hoàn thành** - 100% (JWT Auth + Member API + Card API)
+
+---
+
+## 🚨 **Vấn đề 46: Migration từ Netlify sang Vercel**
+
+### 🔄 **Migration Decision:**
+```
+User quyết định đổi từ Netlify sang Vercel cho toàn bộ trflashcard
+```
+
+### 🔍 **Nguyên nhân:**
+- **Netlify Free Limitations**: Không hỗ trợ Docker, giới hạn Functions
+- **Next.js Optimization**: Vercel native support cho Next.js
+- **API Routes**: Full support cho serverless functions
+- **i18n Routing**: Hỗ trợ `/vi/` và `/en/` paths
+- **Free Tier**: Vercel free tier generous hơn
+
+### ✅ **Migration Implementation:**
+1. **Next.js Config Optimization:**
+   ```javascript
+   // next.config.mjs - Vercel optimized
+   const nextConfig = {
+     transpilePackages: ["@refinedev/antd"],
+     experimental: {
+       serverComponentsExternalPackages: ['@supabase/supabase-js']
+     },
+     async redirects() {
+       return [
+         {
+           source: '/',
+           destination: '/vi',
+           permanent: true,
+         },
+       ]
+     },
+   };
+   ```
+
+2. **Vercel Configuration:**
+   ```json
+   // vercel.json - Full configuration
+   {
+     "framework": "nextjs",
+     "functions": {
+       "src/app/api/**/*.ts": {
+         "runtime": "nodejs20.x"
+       }
+     },
+     "rewrites": [
+       {
+         "source": "/api/(.*)",
+         "destination": "/api/$1"
+       }
+     ]
+   }
+   ```
+
+3. **Environment Variables Template:**
+   ```env
+   # env.production - Production template
+   NEXT_PUBLIC_SUPABASE_URL=your_production_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_production_anon_key
+   SUPABASE_SERVICE_ROLE_KEY=your_production_service_role_key
+   JWT_SECRET=your_32_character_production_secret_key_here
+   ```
+
+4. **Deployment Guide:**
+   - **VERCEL_DEPLOYMENT.md** - Chi tiết từng bước
+   - **Environment setup** - Production configuration
+   - **API testing** - Endpoints verification
+   - **i18n routing** - Locale testing
+
+### 📊 **Migration Benefits:**
+- ✅ **Full Next.js Support**: API routes, SSR, i18n
+- ✅ **Free Tier Generous**: 100GB bandwidth, unlimited builds
+- ✅ **Automatic Deployments**: Git integration
+- ✅ **Global CDN**: Fast loading worldwide
+- ✅ **Serverless Functions**: API endpoints hoạt động
+- ✅ **Native Optimization**: Vercel tối ưu cho Next.js
+
+### 🎯 **Kết quả cuối cùng:**
+- ✅ **Vercel Migration** - Complete configuration
+- ✅ **Next.js Optimization** - Vercel-specific config
+- ✅ **Environment Setup** - Production template
+- ✅ **Deployment Guide** - Step-by-step instructions
+- ✅ **Phase 5 tiến độ** - 75% (Vercel Migration)
 
 ---
 

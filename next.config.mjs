@@ -5,7 +5,20 @@ const withNextIntl = createNextIntlPlugin('./i18n/request.ts')
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: ["@refinedev/antd"],
-  output: "standalone",
+  // Vercel optimized configuration
+  experimental: {
+    serverComponentsExternalPackages: ['@supabase/supabase-js']
+  },
+  // Enable i18n routing
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/vi',
+        permanent: true,
+      },
+    ]
+  },
 };
 
 export default withNextIntl(nextConfig);
