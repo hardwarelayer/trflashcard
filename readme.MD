@@ -13,14 +13,10 @@
   - [🧭 Navigation](#-navigation)
   - [🌍 i18n Development Workflow](#-i18n-development-workflow)
   - [📁 Cấu trúc thư mục đề xuất](#-cấu-trúc-thư-mục-đề-xuất)
-- [🚀 Lệnh khởi tạo và phát triển](#-lệnh-khởi-tạo-và-phát-triển)
-  - [0️⃣ Cài đặt Node.js và npm (Windows PowerShell)](#0️⃣-cài-đặt-nodejs-và-npm-windows-powershell)
-  - [1️⃣ Khởi tạo dự án](#1️⃣-khởi-tạo-dự-án)
-  - [2️⃣ Development](#2️⃣-development)
-  - [3️⃣ Deploy lên Vercel](#3️⃣-deploy-lên-vercel)
+- [🚀 Quick Start](#-quick-start)
 - [🔐 Authentication & JWT Token Management](./docs/authentication.md)
-- [🚀 Setup Guide](./SETUP.md)
-- [🚀 Vercel Deployment Guide](./VERCEL_DEPLOYMENT.md)
+- [🚀 Setup Guide](./docs/SETUP.md)
+- [🚀 Vercel Deployment Guide](./docs/VERCEL_DEPLOYMENT.md)
 - [📊 Tiến độ dự án](#-tiến-độ-dự-án)
 - [📝 Lịch sử thay đổi](#-lịch-sử-thay-đổi)
 - [🔧 Dev Log](./docs/dev-log.md)
@@ -56,119 +52,93 @@
 
 ## 🛠️ Technology Stack
 
-- **Framework**: Refine + Next.js + Ant Design + Supabase
-- **Môi trường**: Local development và deploy lên Vercel + Supabase
-- **Tối ưu**: Bundle size và performance với Vercel optimization
-- **Best Practices**: Development workflow và best practices
-- **Future**: Scalability và technology updates
+### **Frontend Framework:**
+- **Next.js 15** - App Router, SSR/ISR, middleware
+- **React 18** - UI components và state management
+- **Refine Framework** - Admin panel framework
+- **Ant Design 5.23** - UI component library
+- **TypeScript** - Type safety và development experience
+
+### **Backend & Database:**
+- **Supabase** - Backend-as-a-Service, PostgreSQL database
+- **Row Level Security (RLS)** - Database security
+- **JWT Authentication** - Custom token system cho mobile app
+- **bcryptjs** - Password hashing
+
+### **Internationalization:**
+- **next-intl** - i18n routing và translations
+- **Vietnamese (vi)** - Default language
+- **English (en)** - Secondary language
+
+### **Development & Deployment:**
+- **Vercel** - Production hosting với serverless functions
+- **Environment Variables** - Production configuration
+- **GitHub** - Version control và CI/CD
+- **ESLint** - Code quality và consistency
+
+### **API & Integration:**
+- **RESTful APIs** - Member và Card management
+- **JWT Tokens** - Access token (1h) + Refresh token (30d)
+- **Error Handling** - Consistent API responses
+- **Mobile Ready** - APIs designed for mobile app integration
 
 ## 🌐 Ứng dụng Web - Bộ nhớ, Navigation, Đa ngôn ngữ
 
 ### 💾 Quản lý bộ nhớ/State
 
 - **Next.js App Router**: File-based routing, SSR/ISR, middleware auth
-- **React Query/TanStack Query**: Data fetching + caching, pagination, prefetch khi hover
-- **Zod**: Validate payloads và response
-- **Local storage**: Chỉ lưu `locale`, `page_size` tùy chọn UI
-- **Token admin**: Lưu trong httpOnly cookie (server side)
+- **TanStack Query**: Data fetching + caching, pagination, real-time updates
+- **Supabase Client**: Direct database connection cho admin operations
+- **JWT Tokens**: Access/refresh tokens cho mobile app authentication
+- **Local Storage**: UI preferences (locale, theme)
+- **Session Management**: Supabase Auth cho admin, JWT cho mobile
 
 ### 🧭 Navigation
 
-- **App Router**: Layout chung (sidebar/topbar), segment cho từng module
-- **Routes**: `/dashboard`, `/members`, `/programs`, `/lessons`, `/contents`, `/settings`, `/logs`
-- **Breadcrumb**: Theo cây Program → Lesson → Step
+- **App Router**: Layout chung (sidebar), segment cho từng module
+- **Routes**: `/dashboard`, `/members`, `/cards`, `/settings`, `/login`
+- **i18n Routing**: `/vi/*` (Vietnamese), `/en/*` (English)
+- **Auto Redirect**: `/` → `/vi` (default language)
 
 ### 🌍 i18n Development Workflow
 
-#### 📁 Cấu trúc thư mục đề xuất
+#### 📁 Current Implementation
 
 ```
 trflashcard/
-├── app/
+├── src/app/
 │   ├── [locale]/
 │   │   ├── layout.tsx
 │   │   ├── page.tsx
 │   │   ├── dashboard/
 │   │   ├── members/
-│   │   └── cards/
+│   │   ├── cards/
+│   │   └── settings/
 │   └── layout.tsx
-├── components/
-│   ├── ui/
-│   └── forms/
-├── lib/
-│   ├── auth/
-│   ├── i18n/
-│   └── supabase/
 ├── messages/
 │   ├── vi.json
 │   └── en.json
-├── types/
-└── middleware.ts
+├── i18n/
+│   └── request.ts
+├── middleware.ts
+└── next.config.mjs
 ```
 
-## 🚀 Setup & Development
+#### 🌐 **Supported Languages:**
+- **Vietnamese (vi)** - Default language
+- **English (en)** - Secondary language
 
-### 📋 **Quick Start**
-Để bắt đầu với dự án, hãy xem hướng dẫn chi tiết tại: **[🚀 Setup Guide](./SETUP.md)**
+#### 🔧 **Implementation:**
+- **next-intl** - i18n routing và translations
+- **Middleware** - Language detection và routing
+- **Translation Files** - JSON-based translations
+- **Auto Redirect** - Root path redirects to default language
 
-### 0️⃣ Cài đặt Node.js và npm (Windows PowerShell)
+## 🚀 Quick Start
 
-#### Cách 1: Sử dụng Chocolatey
-```powershell (với quyền admin mới được)
-# Cài đặt Chocolatey (nếu chưa có)
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+Để bắt đầu với dự án, hãy xem hướng dẫn chi tiết tại: **[🚀 Setup Guide](./docs/SETUP.md)**
 
-# Cài đặt Node.js
-choco install nodejs
-
-# Kiểm tra cài đặt
-node --version
-npm --version
-```
-
-Chú ý: sau khi cài phải restart lại terminal và IDE để có PATH tương ứng.
-
-### 1️⃣ Khởi tạo dự án
-
-```bash
-# Khởi tạo Refine + Ant Design (tôi KHÔNG dùng --preset vì bị lỗi tự điền trên windows 11)
-npx create-refine-app@latest trflashcard
-
-# Chọn options:
-# - Template: Next.js
-# - Backend: Supabase
-# - UI Framework: Ant Design
-# - Examples: Yes (Recommended)
-# - Authentication: None
-# - Email: (bỏ trống)
-
-# Cài đặt thêm dependencies
-npm install @tanstack/react-query next-intl zod
-```
-
-### 2️⃣ Development
-
-```bash
-# Chạy development server
-npm run dev
-
-# Build cho production
-npm run build
-
-# Start production server
-npm start
-```
-
-### 3️⃣ Deploy lên Vercel
-
-```bash
-# Build project
-npm run build
-
-# Deploy lên Vercel (xem hướng dẫn chi tiết)
-```
-
-**📚 Chi tiết:** [🚀 Vercel Deployment Guide](./VERCEL_DEPLOYMENT.md)
+**📚 Deployment:** [🚀 Vercel Deployment Guide](./docs/VERCEL_DEPLOYMENT.md)
 
 ---
 
