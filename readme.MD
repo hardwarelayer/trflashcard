@@ -17,9 +17,10 @@
   - [0️⃣ Cài đặt Node.js và npm (Windows PowerShell)](#0️⃣-cài-đặt-nodejs-và-npm-windows-powershell)
   - [1️⃣ Khởi tạo dự án](#1️⃣-khởi-tạo-dự-án)
   - [2️⃣ Development](#2️⃣-development)
-  - [3️⃣ Deploy lên Netlify](#3️⃣-deploy-lên-netlify)
+  - [3️⃣ Deploy lên Vercel](#3️⃣-deploy-lên-vercel)
 - [🔐 Authentication & JWT Token Management](./docs/authentication.md)
 - [🚀 Setup Guide](./SETUP.md)
+- [🚀 Vercel Deployment Guide](./VERCEL_DEPLOYMENT.md)
 - [📊 Tiến độ dự án](#-tiến-độ-dự-án)
 - [📝 Lịch sử thay đổi](#-lịch-sử-thay-đổi)
 - [🔧 Dev Log](./docs/dev-log.md)
@@ -158,14 +159,16 @@ npm run build
 npm start
 ```
 
-### 3️⃣ Deploy lên Netlify
+### 3️⃣ Deploy lên Vercel
 
 ```bash
-# Build static files
+# Build project
 npm run build
 
-# Deploy lên Netlify (sẽ có hướng dẫn chi tiết sau)
+# Deploy lên Vercel (xem hướng dẫn chi tiết)
 ```
+
+**📚 Chi tiết:** [🚀 Vercel Deployment Guide](./VERCEL_DEPLOYMENT.md)
 
 ---
 
@@ -224,6 +227,8 @@ npm run build
 - [x] **Vercel configuration** - vercel.json và next.config.mjs ✅
 - [ ] **Testing suite** - Unit tests và integration tests
 - [ ] **Production testing** - API endpoints và i18n routing
+
+**📚 Deployment Guide:** [🚀 Vercel Deployment Guide](./VERCEL_DEPLOYMENT.md)
 
 #### 🌍 **Phase 6: i18n Enhancement** *(Kế hoạch)*
 - [ ] **Login page i18n** - Dropdown chọn ngôn ngữ
