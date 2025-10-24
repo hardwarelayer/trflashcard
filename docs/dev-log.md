@@ -2293,12 +2293,160 @@ Warning: [antd: compatible] antd v5 support React is 16 ~ 18. see https://u.ant.
 
 **🎉 REACT COMPATIBILITY WARNING SUPPRESSED - SAFE APPROACH! 🚀**
 
+---
+
+## 📚 **Related Documentation**
+
+- **[Setup Guide](./SETUP.md)** - Hướng dẫn cài đặt và chạy dự án
+- **[Authentication Guide](./authentication.md)** - Hướng dẫn authentication
+- **[Compatibility Notes](./compatibility-notes.md)** - React 19 vs Ant Design v5 compatibility
+- **[Vercel Deployment Guide](./VERCEL_DEPLOYMENT.md)** - Hướng dẫn deploy lên Vercel
+- **[README](../readme.MD)** - Tổng quan dự án
+
 ### 📝 **Technical Decision:**
 - **Compatibility Status**: Chấp nhận hiện trạng React 19 vs Ant Design v5
 - **Next.js 15**: Sử dụng React 19 internally
 - **Ant Design v5**: Chỉ support React 16-18
 - **Reason**: Tránh gặp các vấn đề lớn hơn khi nâng cấp lên React 19
 - **Future Planning**: Chờ Ant Design support React 19 chính thức
+
+---
+
+## 🚨 **Vấn đề 57: Vercel Deploy Error - Function Runtimes**
+
+### ❌ **Lỗi gặp phải:**
+```
+Error: Function Runtimes must have a valid version, for example `now-php@1.0.0`.
+```
+
+### 🔍 **Nguyên nhân:**
+- **Vercel.json Configuration**: Cấu hình `functions` không đúng format
+- **Next.js Auto-Detection**: Next.js tự động detect API routes
+- **Runtime Configuration**: Không cần cấu hình runtime cho Next.js
+- **Vercel CLI**: Version 48.6.0 có yêu cầu format khác
+
+### ✅ **Cách xử lý:**
+1. **Remove Functions Config** - `vercel.json`
+   ```json
+   // TRƯỚC - Có functions config
+   "functions": {
+     "src/app/api/**/*.ts": {
+       "runtime": "nodejs20.x"
+     }
+   }
+
+   // SAU - Remove functions config
+   // Next.js tự động detect API routes
+   ```
+
+2. **Keep Essential Config** - `vercel.json`
+   ```json
+   {
+     "framework": "nextjs",
+     "buildCommand": "npm run build",
+     "devCommand": "npm run dev",
+     "installCommand": "npm install",
+     "rewrites": [...],
+     "redirects": [...],
+     "headers": [...]
+   }
+   ```
+
+### 📝 **Kết quả:**
+- ✅ **Deploy Success** - Vercel deploy hoạt động bình thường
+- ✅ **Auto-Detection** - Next.js tự động detect API routes
+- ✅ **Clean Config** - Vercel.json đơn giản hơn
+- ✅ **No Runtime Issues** - Không còn runtime errors
+
+### 🎯 **Bài học rút ra:**
+1. **Next.js Auto-Detection**: Không cần cấu hình functions cho Next.js
+2. **Vercel.json**: Chỉ cần config cần thiết
+3. **API Routes**: Next.js tự động handle API routes
+4. **Runtime Management**: Vercel tự động manage runtime
+5. **Clean Configuration**: Giữ config đơn giản
+
+**🎉 VERCEL DEPLOY ERROR FIXED - CLEAN CONFIG! 🚀**
+
+---
+
+## 🚨 **Vấn đề 58: Vercel Build Error - supabaseUrl is required**
+
+### ❌ **Lỗi gặp phải:**
+```
+Error: supabaseUrl is required.
+Build error occurred
+[Error: Failed to collect page data for /_not-found]
+```
+
+### 🔍 **Nguyên nhân:**
+- **Missing Environment Variables**: Environment variables chưa được cấu hình trong Vercel
+- **Supabase Configuration**: `NEXT_PUBLIC_SUPABASE_URL` không có
+- **Build Process**: Next.js build cần environment variables
+- **Vercel Deployment**: Environment variables chưa được set
+
+### ✅ **Cách xử lý:**
+1. **Vercel Dashboard** → Project Settings → Environment Variables
+2. **Add Required Variables:**
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+   SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+   JWT_SECRET=your-32-character-secret-key
+   ```
+3. **Set Environment Scope** - Production
+4. **Redeploy** - `vercel deploy --prod`
+
+### 📝 **Kết quả:**
+- ✅ **Environment Variables** - Đã cấu hình trong Vercel
+- ✅ **Build Success** - Build process hoạt động bình thường
+- ✅ **Deploy Success** - Vercel deploy thành công
+- ✅ **Supabase Connection** - Kết nối Supabase hoạt động
+
+### 🎯 **Bài học rút ra:**
+1. **Environment Variables**: Cần cấu hình trong Vercel Dashboard
+2. **Required Variables**: Supabase URL và keys là bắt buộc
+3. **Build Process**: Next.js build cần environment variables
+4. **Deployment**: Environment variables phải được set trước khi deploy
+5. **Configuration**: Cần cấu hình đầy đủ trước khi deploy
+
+**🎉 VERCEL BUILD ERROR FIXED - ENVIRONMENT VARIABLES CONFIGURED! 🚀**
+
+---
+
+## 🚨 **Vấn đề 59: Vercel Deployment Protection Error**
+
+### ❌ **Lỗi gặp phải:**
+```
+<!doctype html><html lang=en><meta charset=utf-8>...
+Authentication Required
+```
+
+### 🔍 **Nguyên nhân:**
+- **Vercel Deployment Protection**: Vercel đã bật protection cho deployment
+- **API Access Blocked**: APIs không thể access được từ bên ngoài
+- **Authentication Required**: Cần bypass token để access
+- **Mobile App Integration**: Mobile app không thể call APIs
+
+### ✅ **Cách xử lý:**
+1. **Vercel Dashboard** → Project Settings → General
+2. **Deployment Protection** → Turn OFF
+3. **Save** changes
+4. **Test API endpoints** - APIs sẽ accessible
+
+### 📝 **Kết quả:**
+- ✅ **API Access** - APIs accessible từ bên ngoài
+- ✅ **Mobile Integration** - Mobile app có thể call APIs
+- ✅ **Public APIs** - Authentication APIs hoạt động bình thường
+- ✅ **Development** - Easier testing và development
+
+### 🎯 **Bài học rút ra:**
+1. **Deployment Protection**: Cần disable cho API access
+2. **Mobile Integration**: APIs cần public access
+3. **Authentication APIs**: Cần accessible cho mobile app
+4. **Development**: Easier testing khi disable protection
+5. **Production Setup**: Cần cấu hình đúng cho production
+
+**🎉 VERCEL DEPLOYMENT PROTECTION DISABLED - APIS ACCESSIBLE! 🚀**
 
 ---
 
@@ -3115,3 +3263,13 @@ Warning: [antd: compatible] antd v5 support React is 16 ~ 18. see https://u.ant.
 5. **Warning Management**: Quản lý warnings một cách có chọn lọc
 
 **🎉 REACT COMPATIBILITY WARNING SUPPRESSED - SAFE APPROACH! 🚀**
+
+---
+
+## 📚 **Related Documentation**
+
+- **[Setup Guide](./SETUP.md)** - Hướng dẫn cài đặt và chạy dự án
+- **[Authentication Guide](./authentication.md)** - Hướng dẫn authentication
+- **[Compatibility Notes](./compatibility-notes.md)** - React 19 vs Ant Design v5 compatibility
+- **[Vercel Deployment Guide](./VERCEL_DEPLOYMENT.md)** - Hướng dẫn deploy lên Vercel
+- **[README](../readme.MD)** - Tổng quan dự án

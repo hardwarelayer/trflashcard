@@ -134,6 +134,47 @@ vercel --prod
    npm run build
    ```
 
+3. **Vercel Deploy Error: Function Runtimes**
+   ```
+   Error: Function Runtimes must have a valid version, for example `now-php@1.0.0`.
+   ```
+   **Fix:** Remove `functions` configuration from `vercel.json` - Next.js auto-detects API routes
+
+4. **Build Error: supabaseUrl is required**
+   ```
+   Error: supabaseUrl is required.
+   ```
+   **Fix:** Configure environment variables in Vercel Dashboard
+   
+   **Steps:**
+   1. Go to Vercel Dashboard → Your Project → Settings → Environment Variables
+   2. Add these required variables:
+      - `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
+      - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Your Supabase anon key
+      - `SUPABASE_SERVICE_ROLE_KEY` - Your Supabase service role key
+      - `JWT_SECRET` - 32+ character secret for JWT tokens
+   3. Set environment scope to "Production"
+   4. Redeploy: `vercel deploy --prod`
+
+5. **Vercel Deployment Protection Error**
+   ```
+   <!doctype html><html lang=en><meta charset=utf-8>...
+   Authentication Required
+   ```
+   **Fix:** Disable Deployment Protection for API access
+   
+   **Steps:**
+   1. Go to Vercel Dashboard → Your Project → Settings → General
+   2. Find "Deployment Protection" section
+   3. Turn OFF protection
+   4. Save changes
+   5. Test API endpoints again
+   
+   **Why Disable:**
+   - APIs need public access for mobile app integration
+   - Authentication APIs require public access
+   - Easier testing and development
+
 3. **Cache Issues (Linux/Mac)**
    ```bash
    # Clear Next.js cache
@@ -170,3 +211,13 @@ vercel --prod
 ---
 
 **🎉 Congratulations! Your Next.js app is now live on Vercel!**
+
+---
+
+## 📚 **Related Documentation**
+
+- **[Setup Guide](./SETUP.md)** - Hướng dẫn cài đặt và chạy dự án
+- **[Authentication Guide](./authentication.md)** - Hướng dẫn authentication
+- **[Dev Log](./dev-log.md)** - Log các vấn đề đã gặp và cách xử lý
+- **[Compatibility Notes](./compatibility-notes.md)** - React 19 vs Ant Design v5 compatibility
+- **[README](../readme.MD)** - Tổng quan dự án

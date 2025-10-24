@@ -157,3 +157,13 @@ const { data, error } = await supabase.auth.signInWithPassword({
 3. **Implement token refresh logic**
 4. **Add rate limiting** và security measures
 5. **Test authentication flows** với Postman/Thunder Client
+
+---
+
+## 📚 **Related Documentation**
+
+- **[Setup Guide](./SETUP.md)** - Hướng dẫn cài đặt và chạy dự án
+- **[Dev Log](./dev-log.md)** - Log các vấn đề đã gặp và cách xử lý
+- **[Compatibility Notes](./compatibility-notes.md)** - React 19 vs Ant Design v5 compatibility
+- **[Vercel Deployment Guide](./VERCEL_DEPLOYMENT.md)** - Hướng dẫn deploy lên Vercel
+- **[README](../readme.MD)** - Tổng quan dự án

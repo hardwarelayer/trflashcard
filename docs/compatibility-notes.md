@@ -67,3 +67,13 @@
 - [Next.js 15 Release Notes](https://nextjs.org/blog/next-15)
 - [React 19 Release Notes](https://react.dev/blog/2024/12/05/react-19)
 - [Ant Design v5 Documentation](https://ant.design/docs/react/introduce)
+
+---
+
+## 📚 **Related Documentation**
+
+- **[Setup Guide](./SETUP.md)** - Hướng dẫn cài đặt và chạy dự án
+- **[Authentication Guide](./authentication.md)** - Hướng dẫn authentication
+- **[Dev Log](./dev-log.md)** - Log các vấn đề đã gặp và cách xử lý
+- **[Vercel Deployment Guide](./VERCEL_DEPLOYMENT.md)** - Hướng dẫn deploy lên Vercel
+- **[README](../readme.MD)** - Tổng quan dự án

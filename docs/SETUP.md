@@ -234,10 +234,12 @@ npm run lint
 
 ## 📚 Tài liệu tham khảo
 
-- **README.md** - Tổng quan dự án
-- **docs/authentication.md** - Hướng dẫn authentication
-- **docs/dev-log.md** - Log các vấn đề đã gặp và cách xử lý
-- **ddl/basic.sql** - Database schema
+- **[README.md](../readme.MD)** - Tổng quan dự án
+- **[Authentication Guide](./authentication.md)** - Hướng dẫn authentication
+- **[Dev Log](./dev-log.md)** - Log các vấn đề đã gặp và cách xử lý
+- **[Compatibility Notes](./compatibility-notes.md)** - React 19 vs Ant Design v5 compatibility
+- **[Vercel Deployment Guide](./VERCEL_DEPLOYMENT.md)** - Hướng dẫn deploy lên Vercel
+- **[Database Schema](../ddl/basic.sql)** - Database schema
 
 ## 🎯 Next Steps
 
