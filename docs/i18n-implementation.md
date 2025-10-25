@@ -48,10 +48,21 @@ This document outlines the complete i18n (internationalization) implementation f
   - `src/app/[locale]/members/edit/[id]/page.tsx`
   - `src/app/[locale]/members/show/[id]/page.tsx`
 
-### Phase 6.5: Cards Page i18n 🔄 IN PROGRESS
-- **Status**: In Progress
-- **Target**: Table headers and forms
-- **Files**: `src/app/[locale]/cards/page.tsx`
+### Phase 6.5: Cards Page i18n ✅ COMPLETED
+- **Status**: Successfully implemented
+- **Features**:
+  - Table headers and pagination translation
+  - Create/Edit/Show forms translation
+  - Form validation messages translation
+  - Delete confirmation dialog translation
+  - Component architecture (Server/Client separation)
+  - Dynamic locale routing for Refine resources
+  - Member selection dropdown translation
+- **Files**: 
+  - `src/app/[locale]/cards/page.tsx`
+  - `src/app/[locale]/cards/create/page.tsx`
+  - `src/app/[locale]/cards/edit/[id]/page.tsx`
+  - `src/app/[locale]/cards/show/[id]/page.tsx`
 
 ### Phase 6.6: Settings Page i18n ⏳ PENDING
 - **Status**: Pending
@@ -184,6 +195,163 @@ This document outlines the complete i18n (internationalization) implementation f
 - `/vi/members/show/[id]` ✅ - Vietnamese show page
 - `/en/members/show/[id]` ✅ - English show page
 
+## 🎯 Phase 6.5: Cards Page i18n - COMPLETED
+
+### **✅ Features Implemented:**
+
+1. **Table Headers i18n** - Card Title, Content, Member ID, Created At, Actions
+2. **Pagination i18n** - "của" / "of" with dynamic range display
+3. **Create Form i18n** - All labels, placeholders, validation messages
+4. **Edit Form i18n** - All labels, placeholders, validation messages
+5. **Show Page i18n** - Basic info, system info, field labels
+6. **Delete Confirmation i18n** - Custom Popconfirm with translated text
+7. **Component Architecture** - Server/Client separation for proper context
+8. **Dynamic Routing** - Refine resources use current locale
+9. **Member Selection** - Dropdown with translated placeholders
+
+### **🌍 Translation Keys Added:**
+
+**Vietnamese (vi.json):**
+```json
+{
+  "cards": {
+    "title": "Quản lý thẻ",
+    "list": "Danh sách thẻ",
+    "create": "Tạo thẻ",
+    "edit": "Chỉnh sửa thẻ",
+    "show": "Chi tiết thẻ",
+    "delete": "Xóa thẻ",
+    "cardTitle": "Tiêu đề",
+    "content": "Nội dung",
+    "member": "Thành viên",
+    "memberId": "ID Thành viên",
+    "createdAt": "Ngày tạo",
+    "actions": "Thao tác",
+    "pagination": "của",
+    "titlePlaceholder": "Nhập tiêu đề thẻ",
+    "contentPlaceholder": "Nhập nội dung thẻ",
+    "memberPlaceholder": "Chọn thành viên",
+    "titleRequired": "Vui lòng nhập tiêu đề!",
+    "titleMinLength": "Tiêu đề phải có ít nhất 3 ký tự!",
+    "titleMaxLength": "Tiêu đề không được quá 100 ký tự!",
+    "contentRequired": "Vui lòng nhập nội dung!",
+    "contentMinLength": "Nội dung phải có ít nhất 10 ký tự!",
+    "contentMaxLength": "Nội dung không được quá 1000 ký tự!",
+    "memberRequired": "Vui lòng chọn thành viên!",
+    "basicInfo": "Thông tin cơ bản",
+    "systemInfo": "Thông tin hệ thống",
+    "notUpdated": "Chưa cập nhật",
+    "lastUpdated": "Cập nhật lần cuối"
+  }
+}
+```
+
+**English (en.json):**
+```json
+{
+  "cards": {
+    "title": "Card Management",
+    "list": "Card List",
+    "create": "Create Card",
+    "edit": "Edit Card",
+    "show": "Card Details",
+    "delete": "Delete Card",
+    "cardTitle": "Title",
+    "content": "Content",
+    "member": "Member",
+    "memberId": "Member ID",
+    "createdAt": "Created At",
+    "actions": "Actions",
+    "pagination": "of",
+    "titlePlaceholder": "Enter card title",
+    "contentPlaceholder": "Enter card content",
+    "memberPlaceholder": "Select member",
+    "titleRequired": "Please enter title!",
+    "titleMinLength": "Title must be at least 3 characters!",
+    "titleMaxLength": "Title must not exceed 100 characters!",
+    "contentRequired": "Please enter content!",
+    "contentMinLength": "Content must be at least 10 characters!",
+    "contentMaxLength": "Content must not exceed 1000 characters!",
+    "memberRequired": "Please select member!",
+    "basicInfo": "Basic Information",
+    "systemInfo": "System Information",
+    "notUpdated": "Not updated",
+    "lastUpdated": "Last updated"
+  }
+}
+```
+
+### **🔧 Technical Solutions:**
+
+1. **Component Architecture Pattern:**
+   ```typescript
+   // Server Component
+   export default function CardsPage({ params }: CardsPageProps) {
+     const { locale } = use(params);
+     return (
+       <AdminLayout locale={locale}>
+         <CardsContent />
+       </AdminLayout>
+     );
+   }
+
+   // Client Component  
+   function CardsContent() {
+     const t = useTranslations();
+     // ... component logic
+   }
+   ```
+
+2. **Custom Delete Confirmation:**
+   ```typescript
+   <Popconfirm
+     title={t('common.deleteConfirm')}
+     onConfirm={() => handleDelete(record.id)}
+     okText={t('common.yes')}
+     cancelText={t('common.no')}
+   >
+     <Button type="text" danger size="small" icon={<DeleteOutlined />} />
+   </Popconfirm>
+   ```
+
+3. **Dynamic Locale Routing:**
+   ```typescript
+   // refine-wrapper.tsx
+   resources={[
+     {
+       name: "demo_card",
+       list: `/${locale}/cards`,
+       create: `/${locale}/cards/create`,
+       edit: `/${locale}/cards/edit/:id`,
+       show: `/${locale}/cards/show/:id`,
+     }
+   ]}
+   ```
+
+4. **Member Selection Dropdown:**
+   ```typescript
+   <Select
+     placeholder={t('cards.memberPlaceholder')}
+     showSearch
+     loading={membersLoading}
+     optionFilterProp="children"
+     filterOption={(input, option) =>
+       (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+     }
+     options={membersOptions}
+   />
+   ```
+
+### **🚀 Working Routes:**
+- `/vi/cards` ✅ - Vietnamese cards list
+- `/en/cards` ✅ - English cards list  
+- `/vi/cards/create` ✅ - Vietnamese create form
+- `/en/cards/create` ✅ - English create form
+- `/vi/cards/edit/[id]` ✅ - Vietnamese edit form
+- `/en/cards/edit/[id]` ✅ - English edit form
+- `/vi/cards/show/[id]` ✅ - Vietnamese show page
+- `/en/cards/show/[id]` ✅ - English show page
+
 ## 🧹 Code Cleanup Process
 
 ### **✅ Cleanup Completed:**
@@ -201,6 +369,81 @@ This document outlines the complete i18n (internationalization) implementation f
 - **Cleaner Code** - No unused imports/variables
 - **Better i18n** - Consistent with i18n approach
 - **Custom Components** - Full control over UI elements and translations
+
+## 🎓 Lessons Learned & Best Practices
+
+### **🔧 Key Technical Patterns:**
+
+1. **Server/Client Component Separation:**
+   ```typescript
+   // Pattern: Server Component → AdminLayout → Client Component
+   export default function PageComponent({ params }: PageProps) {
+     const { locale } = use(params);
+     return (
+       <AdminLayout locale={locale}>
+         <ContentComponent />
+       </AdminLayout>
+     );
+   }
+   ```
+
+2. **Translation Key Organization:**
+   ```json
+   {
+     "namespace": {
+       "action": "Create/Edit/Show/Delete",
+       "field": "Field labels",
+       "fieldPlaceholder": "Placeholder text",
+       "fieldRequired": "Required validation",
+       "fieldMinLength": "Min length validation",
+       "fieldMaxLength": "Max length validation",
+       "basicInfo": "Basic information section",
+       "systemInfo": "System information section"
+     }
+   }
+   ```
+
+3. **Custom Delete Confirmation Pattern:**
+   ```typescript
+   <Popconfirm
+     title={t('common.deleteConfirm')}
+     onConfirm={() => handleDelete(record.id)}
+     okText={t('common.yes')}
+     cancelText={t('common.no')}
+   >
+     <Button type="text" danger size="small" icon={<DeleteOutlined />} />
+   </Popconfirm>
+   ```
+
+4. **Dynamic Locale Formatting:**
+   ```typescript
+   // Instead of hardcoded locale
+   new Date(value).toLocaleDateString('vi-VN')
+   
+   // Use dynamic locale
+   new Date(value).toLocaleDateString()
+   ```
+
+### **🚀 Performance Optimizations:**
+
+1. **Component Architecture** - Reduces bundle size by separating server/client logic
+2. **Dynamic Imports** - Messages loaded only when needed
+3. **Context Hierarchy** - Proper NextIntlClientProvider placement
+4. **Code Cleanup** - Removed unused imports and variables
+
+### **🌍 Translation Management:**
+
+1. **Consistent Naming** - `fieldLabel`, `fieldPlaceholder`, `fieldRequired`
+2. **Namespace Organization** - Group related keys by feature
+3. **Validation Messages** - Separate keys for different validation rules
+4. **UI Elements** - Separate keys for labels, placeholders, and actions
+
+### **🔧 Common Issues & Solutions:**
+
+1. **Context Error** - Always wrap client components with NextIntlClientProvider
+2. **Import Paths** - Calculate relative paths from component location
+3. **Hardcoded Locale** - Use dynamic locale formatting
+4. **Unused Code** - Regular cleanup of imports and variables
 
 ## 🏗️ Technical Architecture
 
@@ -405,6 +648,7 @@ import { StyleProvider } from '@ant-design/cssinjs';
 - **Phase 6.2**: Sidebar i18n ✅
 - **Phase 6.3**: Dashboard i18n ✅
 - **Phase 6.4**: Members Page i18n ✅
+- **Phase 6.5**: Cards Page i18n ✅
 - Clean codebase
 - Proper routing setup
 - Translation infrastructure
@@ -413,9 +657,7 @@ import { StyleProvider } from '@ant-design/cssinjs';
 - Dynamic locale routing
 - Custom delete confirmation
 - Code cleanup process
-
-### 🔄 In Progress
-- **Phase 6.5**: Cards Page i18n
+- Member selection dropdown i18n
 
 ### ⏳ Pending
 - **Phase 6.6**: Settings Page i18n

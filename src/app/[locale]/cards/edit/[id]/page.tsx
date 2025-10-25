@@ -1,32 +1,20 @@
 "use client";
 
 import { Edit, useForm } from "@refinedev/antd";
-import { useOne } from "@refinedev/core";
 import { Form, Input, Select } from "antd";
 import AdminLayout from "@/components/layout/admin-layout";
 import { use } from "react";
 import { supabaseBrowserClient as supabase } from "../../../../../../lib/supabase/client";
 import { useEffect, useState } from "react";
+import { useTranslations } from 'next-intl';
 
-interface EditCardPageProps {
-  params: Promise<{
-    locale: string;
-    id: string;
-  }>;
-}
-
-export default function EditCardPage({ params }: EditCardPageProps) {
-  const { locale, id } = use(params);
+function EditCardContent({ id }: { id: string }) {
+  const t = useTranslations();
   
   const { formProps, saveButtonProps } = useForm({
     resource: "demo_card",
     id: id,
     redirect: "list"
-  });
-
-  const { result: cardData } = useOne({
-    resource: "demo_card",
-    id: id
   });
 
   // Sử dụng direct Supabase client thay vì Refine hooks
@@ -66,58 +54,73 @@ export default function EditCardPage({ params }: EditCardPageProps) {
   })) || [];
 
   return (
+    <Edit
+      title={t('cards.edit')}
+      saveButtonProps={saveButtonProps}
+    >
+      <Form {...formProps} layout="vertical">
+        <Form.Item
+          label={t('cards.titleLabel')}
+          name="title"
+          rules={[
+            { required: true, message: t('cards.titleRequired') },
+            { min: 3, message: t('cards.titleMinLength') },
+            { max: 100, message: t('cards.titleMaxLength') }
+          ]}
+        >
+          <Input placeholder={t('cards.titlePlaceholder')} />
+        </Form.Item>
+
+        <Form.Item
+          label={t('cards.contentLabel')}
+          name="content"
+          rules={[
+            { required: true, message: t('cards.contentRequired') },
+            { min: 10, message: t('cards.contentMinLength') }
+          ]}
+        >
+          <Input.TextArea 
+            placeholder={t('cards.contentPlaceholder')} 
+            rows={4}
+          />
+        </Form.Item>
+
+        <Form.Item
+          label={t('cards.memberLabel')}
+          name="member_id"
+          rules={[
+            { required: true, message: t('cards.memberRequired') }
+          ]}
+        >
+          <Select
+            placeholder={t('cards.memberPlaceholder')}
+            showSearch
+            loading={membersLoading}
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+            }
+            options={membersOptions}
+          />
+        </Form.Item>
+      </Form>
+    </Edit>
+  );
+}
+
+interface EditCardPageProps {
+  params: Promise<{
+    locale: string;
+    id: string;
+  }>;
+}
+
+export default function EditCardPage({ params }: EditCardPageProps) {
+  const { locale, id } = use(params);
+  
+  return (
     <AdminLayout locale={locale}>
-      <Edit
-        title="Chỉnh sửa Card"
-        saveButtonProps={saveButtonProps}
-      >
-        <Form {...formProps} layout="vertical">
-          <Form.Item
-            label="Tiêu đề"
-            name="title"
-            rules={[
-              { required: true, message: "Vui lòng nhập tiêu đề!" },
-              { min: 3, message: "Tiêu đề phải có ít nhất 3 ký tự!" },
-              { max: 200, message: "Tiêu đề không được quá 200 ký tự!" }
-            ]}
-          >
-            <Input placeholder="Nhập tiêu đề card" />
-          </Form.Item>
-
-          <Form.Item
-            label="Nội dung"
-            name="content"
-            rules={[
-              { required: true, message: "Vui lòng nhập nội dung!" },
-              { min: 10, message: "Nội dung phải có ít nhất 10 ký tự!" }
-            ]}
-          >
-            <Input.TextArea 
-              placeholder="Nhập nội dung card" 
-              rows={4}
-            />
-          </Form.Item>
-
-          <Form.Item
-            label="Member"
-            name="member_id"
-            rules={[
-              { required: true, message: "Vui lòng chọn member!" }
-            ]}
-          >
-            <Select
-              placeholder="Chọn member"
-              showSearch
-              loading={membersLoading}
-              optionFilterProp="children"
-              filterOption={(input, option) =>
-                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-              }
-              options={membersOptions}
-            />
-          </Form.Item>
-        </Form>
-      </Edit>
+      <EditCardContent id={id} />
     </AdminLayout>
   );
 }

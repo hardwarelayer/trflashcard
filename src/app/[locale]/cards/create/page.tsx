@@ -6,15 +6,10 @@ import AdminLayout from "@/components/layout/admin-layout";
 import { use } from "react";
 import { supabaseBrowserClient as supabase } from "../../../../../lib/supabase/client";
 import { useEffect, useState } from "react";
+import { useTranslations } from 'next-intl';
 
-interface CreateCardPageProps {
-  params: Promise<{
-    locale: string;
-  }>;
-}
-
-export default function CreateCardPage({ params }: CreateCardPageProps) {
-  const { locale } = use(params);
+function CreateCardContent() {
+  const t = useTranslations();
   
   const { formProps, saveButtonProps } = useForm({
     resource: "demo_card",
@@ -58,58 +53,72 @@ export default function CreateCardPage({ params }: CreateCardPageProps) {
   })) || [];
 
   return (
+    <Create
+      title={t('cards.create')}
+      saveButtonProps={saveButtonProps}
+    >
+      <Form {...formProps} layout="vertical">
+        <Form.Item
+          label={t('cards.cardTitle')}
+          name="title"
+          rules={[
+            { required: true, message: t('cards.titleRequired') },
+            { min: 3, message: t('cards.titleMinLength') },
+            { max: 100, message: t('cards.titleMaxLength') }
+          ]}
+        >
+          <Input placeholder={t('cards.titlePlaceholder')} />
+        </Form.Item>
+
+        <Form.Item
+          label={t('cards.content')}
+          name="content"
+          rules={[
+            { required: true, message: t('cards.contentRequired') },
+            { min: 10, message: t('cards.contentMinLength') }
+          ]}
+        >
+          <Input.TextArea 
+            placeholder={t('cards.contentPlaceholder')} 
+            rows={4}
+          />
+        </Form.Item>
+
+        <Form.Item
+          label={t('cards.member')}
+          name="member_id"
+          rules={[
+            { required: true, message: t('cards.memberRequired') }
+          ]}
+        >
+          <Select
+            placeholder={t('cards.member')}
+            showSearch
+            loading={membersLoading}
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+            }
+            options={membersOptions}
+          />
+        </Form.Item>
+      </Form>
+    </Create>
+  );
+}
+
+interface CreateCardPageProps {
+  params: Promise<{
+    locale: string;
+  }>;
+}
+
+export default function CreateCardPage({ params }: CreateCardPageProps) {
+  const { locale } = use(params);
+  
+  return (
     <AdminLayout locale={locale}>
-      <Create
-        title="Tạo Card mới"
-        saveButtonProps={saveButtonProps}
-      >
-        <Form {...formProps} layout="vertical">
-          <Form.Item
-            label="Tiêu đề"
-            name="title"
-            rules={[
-              { required: true, message: "Vui lòng nhập tiêu đề!" },
-              { min: 3, message: "Tiêu đề phải có ít nhất 3 ký tự!" },
-              { max: 200, message: "Tiêu đề không được quá 200 ký tự!" }
-            ]}
-          >
-            <Input placeholder="Nhập tiêu đề card" />
-          </Form.Item>
-
-          <Form.Item
-            label="Nội dung"
-            name="content"
-            rules={[
-              { required: true, message: "Vui lòng nhập nội dung!" },
-              { min: 10, message: "Nội dung phải có ít nhất 10 ký tự!" }
-            ]}
-          >
-            <Input.TextArea 
-              placeholder="Nhập nội dung card" 
-              rows={4}
-            />
-          </Form.Item>
-
-          <Form.Item
-            label="Member"
-            name="member_id"
-            rules={[
-              { required: true, message: "Vui lòng chọn member!" }
-            ]}
-          >
-            <Select
-              placeholder="Chọn member"
-              showSearch
-              loading={membersLoading}
-              optionFilterProp="children"
-              filterOption={(input, option) =>
-                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-              }
-              options={membersOptions}
-            />
-          </Form.Item>
-        </Form>
-      </Create>
+      <CreateCardContent />
     </AdminLayout>
   );
 }
