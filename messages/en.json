@@ -19,7 +19,9 @@
     "members": "Members",
     "cards": "Cards",
     "settings": "Settings",
-    "logout": "Logout"
+    "logout": "Logout",
+    "adminPanel": "Admin Panel",
+    "language": "Language"
   },
   "auth": {
     "login": "Login",
@@ -40,7 +42,16 @@
     "totalMembers": "Total Members",
     "totalCards": "Total Cards",
     "recentMembers": "Recent Members",
-    "recentCards": "Recent Cards"
+    "recentCards": "Recent Cards",
+    "membersTitle": "Members",
+    "cardsTitle": "Cards",
+    "settingsTitle": "Settings",
+    "membersDescription": "Manage members",
+    "cardsDescription": "Manage learning cards",
+    "settingsDescription": "System configuration",
+    "totalMembersCount": "Total members",
+    "totalCardsCount": "Total cards",
+    "appSettings": "Application settings"
   },
   "members": {
     "title": "Member Management",

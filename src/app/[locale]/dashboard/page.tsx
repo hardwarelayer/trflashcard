@@ -6,15 +6,10 @@ import AdminLayout from "@/components/layout/admin-layout";
 import { use } from "react";
 import { supabaseBrowserClient as supabase } from "../../../../lib/supabase/client";
 import { useEffect, useState } from "react";
+import { useTranslations } from 'next-intl';
 
-interface DashboardPageProps {
-  params: Promise<{
-    locale: string;
-  }>;
-}
-
-export default function DashboardPage({ params }: DashboardPageProps) {
-  const { locale } = use(params);
+function DashboardContent() {
+  const t = useTranslations();
   
   // Real data from Supabase
   const [totalMembers, setTotalMembers] = useState(0);
@@ -70,27 +65,24 @@ export default function DashboardPage({ params }: DashboardPageProps) {
 
   if (loading) {
     return (
-      <AdminLayout locale={locale}>
-        <div style={{ textAlign: 'center', padding: '50px' }}>
-          <Spin size="large" />
-          <p style={{ marginTop: '16px' }}>Loading dashboard data...</p>
-        </div>
-      </AdminLayout>
+      <div style={{ textAlign: 'center', padding: '50px' }}>
+        <Spin size="large" />
+        <p style={{ marginTop: '16px' }}>{t('common.loading')}</p>
+      </div>
     );
   }
 
   return (
-    <AdminLayout locale={locale}>
-      <div>
+    <div>
         <h1 style={{ fontSize: '24px', marginBottom: '20px' }}>
-          🎉 TR Flashcard Admin Dashboard
+          🎉 {t('dashboard.title')}
         </h1>
 
       <Row gutter={16} style={{ marginBottom: '20px' }}>
         <Col span={6}>
           <Card>
             <Statistic
-              title="Total Members"
+              title={t('dashboard.totalMembers')}
               value={totalMembers}
               prefix={<UserOutlined />}
               valueStyle={{ color: '#3f8600' }}
@@ -100,7 +92,7 @@ export default function DashboardPage({ params }: DashboardPageProps) {
         <Col span={6}>
           <Card>
             <Statistic
-              title="Total Cards"
+              title={t('dashboard.totalCards')}
               value={totalCards}
               prefix={<BookOutlined />}
               valueStyle={{ color: '#cf1322' }}
@@ -110,7 +102,7 @@ export default function DashboardPage({ params }: DashboardPageProps) {
         <Col span={6}>
           <Card>
             <Statistic
-              title="Recent Members"
+              title={t('dashboard.recentMembers')}
               value={recentMembers}
               prefix={<UserOutlined />}
               valueStyle={{ color: '#1890ff' }}
@@ -120,7 +112,7 @@ export default function DashboardPage({ params }: DashboardPageProps) {
         <Col span={6}>
           <Card>
             <Statistic
-              title="Recent Cards"
+              title={t('dashboard.recentCards')}
               value={recentCards}
               prefix={<BookOutlined />}
               valueStyle={{ color: '#722ed1' }}
@@ -131,25 +123,40 @@ export default function DashboardPage({ params }: DashboardPageProps) {
 
       <Row gutter={16}>
         <Col span={8}>
-          <Card title="👥 Members" style={{ height: '200px' }}>
-            <p>Quản lý thành viên</p>
-            <p style={{ color: '#666' }}>Tổng số thành viên: {totalMembers}</p>
+          <Card title={`👥 ${t('dashboard.membersTitle')}`} style={{ height: '200px' }}>
+            <p>{t('dashboard.membersDescription')}</p>
+            <p style={{ color: '#666' }}>{t('dashboard.totalMembersCount')}: {totalMembers}</p>
           </Card>
         </Col>
         <Col span={8}>
-          <Card title="📚 Cards" style={{ height: '200px' }}>
-            <p>Quản lý thẻ học</p>
-            <p style={{ color: '#666' }}>Tổng số thẻ: {totalCards}</p>
+          <Card title={`📚 ${t('dashboard.cardsTitle')}`} style={{ height: '200px' }}>
+            <p>{t('dashboard.cardsDescription')}</p>
+            <p style={{ color: '#666' }}>{t('dashboard.totalCardsCount')}: {totalCards}</p>
           </Card>
         </Col>
         <Col span={8}>
-          <Card title="⚙️ Settings" style={{ height: '200px' }}>
-            <p>Cấu hình hệ thống</p>
-            <p style={{ color: '#666' }}>Cài đặt ứng dụng</p>
+          <Card title={`⚙️ ${t('dashboard.settingsTitle')}`} style={{ height: '200px' }}>
+            <p>{t('dashboard.settingsDescription')}</p>
+            <p style={{ color: '#666' }}>{t('dashboard.appSettings')}</p>
           </Card>
         </Col>
       </Row>
-      </div>
+    </div>
+  );
+}
+
+interface DashboardPageProps {
+  params: Promise<{
+    locale: string;
+  }>;
+}
+
+export default function DashboardPage({ params }: DashboardPageProps) {
+  const { locale } = use(params);
+  
+  return (
+    <AdminLayout locale={locale}>
+      <DashboardContent />
     </AdminLayout>
   );
 }

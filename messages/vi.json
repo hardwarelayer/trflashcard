@@ -19,7 +19,9 @@
     "members": "Thành viên",
     "cards": "Thẻ",
     "settings": "Cài đặt",
-    "logout": "Đăng xuất"
+    "logout": "Đăng xuất",
+    "adminPanel": "Bảng quản trị",
+    "language": "Ngôn ngữ"
   },
   "auth": {
     "login": "Đăng nhập",
@@ -40,7 +42,16 @@
     "totalMembers": "Tổng thành viên",
     "totalCards": "Tổng thẻ",
     "recentMembers": "Thành viên mới",
-    "recentCards": "Thẻ mới"
+    "recentCards": "Thẻ mới",
+    "membersTitle": "Thành viên",
+    "cardsTitle": "Thẻ",
+    "settingsTitle": "Cài đặt",
+    "membersDescription": "Quản lý thành viên",
+    "cardsDescription": "Quản lý thẻ học",
+    "settingsDescription": "Cấu hình hệ thống",
+    "totalMembersCount": "Tổng số thành viên",
+    "totalCardsCount": "Tổng số thẻ",
+    "appSettings": "Cài đặt ứng dụng"
   },
   "members": {
     "title": "Quản lý thành viên",

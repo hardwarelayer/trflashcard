@@ -11,6 +11,7 @@ import {
 } from '@ant-design/icons';
 import { useRouter, usePathname } from 'next/navigation';
 import { useLogout } from '@refinedev/core';
+import { useTranslations } from 'next-intl';
 
 const { Sider } = Layout;
 
@@ -22,6 +23,7 @@ export default function Sidebar({ locale }: SidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
   const { mutate: logout } = useLogout();
+  const t = useTranslations();
 
   const handleLogout = () => {
     logout();
@@ -36,22 +38,22 @@ export default function Sidebar({ locale }: SidebarProps) {
     {
       key: `/${locale}/dashboard`,
       icon: <DashboardOutlined />,
-      label: 'Dashboard',
+      label: t('navigation.dashboard'),
     },
     {
       key: `/${locale}/members`,
       icon: <UserOutlined />,
-      label: 'Members',
+      label: t('navigation.members'),
     },
     {
       key: `/${locale}/cards`,
       icon: <BookOutlined />,
-      label: 'Cards',
+      label: t('navigation.cards'),
     },
     {
       key: `/${locale}/settings`,
       icon: <SettingOutlined />,
-      label: 'Settings',
+      label: t('navigation.settings'),
     },
   ];
 
@@ -66,7 +68,7 @@ export default function Sidebar({ locale }: SidebarProps) {
       <div style={{ padding: '16px', borderBottom: '1px solid #f0f0f0' }}>
         <h3 style={{ margin: 0, color: '#1890ff' }}>🎉 TR Flashcard</h3>
         <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#666' }}>
-          Admin Panel
+          {t('navigation.adminPanel')}
         </p>
       </div>
 
@@ -114,7 +116,7 @@ export default function Sidebar({ locale }: SidebarProps) {
           onClick={handleLogout}
           block
         >
-          Logout
+          {t('navigation.logout')}
         </Button>
       </div>
     </Sider>
