@@ -26,6 +26,9 @@
     "logout": "Đăng xuất",
     "username": "Tên đăng nhập",
     "password": "Mật khẩu",
+    "email": "Email",
+    "adminLogin": "Đăng nhập Admin",
+    "adminNote": "Sử dụng tài khoản Supabase Admin",
     "loginSuccess": "Đăng nhập thành công",
     "loginError": "Đăng nhập thất bại",
     "logoutSuccess": "Đăng xuất thành công"

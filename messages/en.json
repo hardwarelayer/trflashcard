@@ -26,6 +26,9 @@
     "logout": "Logout",
     "username": "Username",
     "password": "Password",
+    "email": "Email",
+    "adminLogin": "Admin Login",
+    "adminNote": "Use Supabase Admin account",
     "loginSuccess": "Login successful",
     "loginError": "Login failed",
     "logoutSuccess": "Logout successful"

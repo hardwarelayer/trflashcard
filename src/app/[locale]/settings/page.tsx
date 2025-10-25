@@ -133,6 +133,16 @@ export default function SettingsPage({ params }: SettingsPageProps) {
     form.resetFields();
   };
 
+  if (!settings) {
+    return (
+      <AdminLayout locale={locale}>
+        <div style={{ textAlign: 'center', padding: '50px' }}>
+          <div>Loading settings...</div>
+        </div>
+      </AdminLayout>
+    );
+  }
+
   return (
     <AdminLayout locale={locale}>
       <div>

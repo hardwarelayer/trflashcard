@@ -9,6 +9,7 @@ import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { StyleProvider } from '@ant-design/cssinjs';
 import { ColorModeContextProvider } from "@contexts/color-mode";
 import { authProvider } from "@providers/auth-provider/supabase-auth-provider.client";
 import { dataProvider } from "@providers/data-provider";
@@ -37,7 +38,8 @@ export default function RefineWrapper({ children, locale = 'vi' }: RefineWrapper
     <QueryClientProvider client={queryClient}>
       <RefineKbarProvider>
         <AntdRegistry>
-          <ColorModeContextProvider defaultMode="light">
+          <StyleProvider hashPriority="high">
+            <ColorModeContextProvider defaultMode="light">
             <DevtoolsProvider>
               <Refine
                 routerProvider={routerProvider}
@@ -91,6 +93,7 @@ export default function RefineWrapper({ children, locale = 'vi' }: RefineWrapper
               </Refine>
             </DevtoolsProvider>
           </ColorModeContextProvider>
+          </StyleProvider>
         </AntdRegistry>
       </RefineKbarProvider>
     </QueryClientProvider>

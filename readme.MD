@@ -17,6 +17,7 @@
 - [🔐 Authentication & JWT Token Management](./docs/authentication.md)
 - [🚀 Setup Guide](./docs/SETUP.md)
 - [🚀 Vercel Deployment Guide](./docs/VERCEL_DEPLOYMENT.md)
+- [🌍 i18n Implementation Guide](./docs/i18n-implementation.md)
 - [📊 Tiến độ dự án](#-tiến-độ-dự-án)
 - [📝 Lịch sử thay đổi](#-lịch-sử-thay-đổi)
 - [🔧 Dev Log](./docs/dev-log.md)
@@ -760,6 +761,7 @@ trflashcard/
 - **[🚀 Setup Guide](./docs/SETUP.md)** - Hướng dẫn cài đặt và chạy dự án
 - **[🔐 Authentication Guide](./docs/authentication.md)** - Hướng dẫn authentication
 - **[🧪 API Testing Guide](./docs/api-test.md)** - Hướng dẫn test tất cả APIs
+- **[🌍 i18n Implementation Guide](./docs/i18n-implementation.md)** - Hướng dẫn implementation i18n
 - **[🔧 Dev Log](./docs/dev-log.md)** - Log các vấn đề đã gặp và cách xử lý
 - **[🔧 Compatibility Notes](./docs/compatibility-notes.md)** - React 19 vs Ant Design v5 compatibility
 - **[🗄️ Database Schema](./ddl/basic.sql)** - Schema database
