@@ -1,21 +1,37 @@
 "use client";
 
 import { Edit, useForm } from "@refinedev/antd";
-import { Form, Input, Select } from "antd";
+import { Form, Input, Select, Button } from "antd";
+import { SaveOutlined, DeleteOutlined, ReloadOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import AdminLayout from "@/components/layout/admin-layout";
 import { use } from "react";
 import { supabaseBrowserClient as supabase } from "../../../../../../lib/supabase/client";
 import { useEffect, useState } from "react";
 import { useTranslations } from 'next-intl';
+import { useDelete } from "@refinedev/core";
+import { useRouter } from "next/navigation";
 
 function EditCardContent({ id }: { id: string }) {
   const t = useTranslations();
+  const router = useRouter();
+  const { mutate: deleteCard } = useDelete();
   
   const { formProps, saveButtonProps } = useForm({
     resource: "demo_card",
     id: id,
     redirect: "list"
   });
+
+  const handleDelete = () => {
+    deleteCard({
+      resource: "demo_card",
+      id: id,
+    });
+  };
+
+  const handleBack = () => {
+    router.back();
+  };
 
   // Sử dụng direct Supabase client thay vì Refine hooks
   const [membersData, setMembersData] = useState<any[]>([]);
@@ -57,6 +73,32 @@ function EditCardContent({ id }: { id: string }) {
     <Edit
       title={t('cards.edit')}
       saveButtonProps={saveButtonProps}
+      headerButtons={[
+        <Button 
+          key="back" 
+          icon={<ArrowLeftOutlined />}
+          onClick={handleBack}
+        >
+          {t('common.back')}
+        </Button>,
+      ]}
+      footerButtons={[
+        <Button 
+          key="refresh" 
+          icon={<ReloadOutlined />}
+          onClick={() => window.location.reload()}
+        >
+          {t('common.refresh')}
+        </Button>,
+        <Button 
+          key="delete" 
+          danger 
+          icon={<DeleteOutlined />}
+          onClick={handleDelete}
+        >
+          {t('common.delete')}
+        </Button>,
+      ]}
     >
       <Form {...formProps} layout="vertical">
         <Form.Item

@@ -1,13 +1,18 @@
 "use client";
 
 import { Edit, useForm } from "@refinedev/antd";
-import { Form, Input, Switch } from "antd";
+import { Form, Input, Switch, Button, Space } from "antd";
+import { SaveOutlined, DeleteOutlined, ReloadOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import AdminLayout from "@/components/layout/admin-layout";
 import { use } from "react";
 import { useTranslations } from 'next-intl';
+import { useDelete } from "@refinedev/core";
+import { useRouter } from "next/navigation";
 
 function EditMemberContent({ id }: { id: string }) {
   const t = useTranslations();
+  const router = useRouter();
+  const { mutate: deleteMember } = useDelete();
   
   const { formProps, saveButtonProps } = useForm({
     resource: "demo_member",
@@ -15,11 +20,48 @@ function EditMemberContent({ id }: { id: string }) {
     redirect: "list"
   });
 
+  const handleDelete = () => {
+    deleteMember({
+      resource: "demo_member",
+      id: id,
+    });
+  };
+
+  const handleBack = () => {
+    router.back();
+  };
+
 
   return (
     <Edit
       title={t('members.edit')}
       saveButtonProps={saveButtonProps}
+      headerButtons={[
+        <Button 
+          key="back" 
+          icon={<ArrowLeftOutlined />}
+          onClick={handleBack}
+        >
+          {t('common.back')}
+        </Button>,
+      ]}
+      footerButtons={[
+        <Button 
+          key="refresh" 
+          icon={<ReloadOutlined />}
+          onClick={() => window.location.reload()}
+        >
+          {t('common.refresh')}
+        </Button>,
+        <Button 
+          key="delete" 
+          danger 
+          icon={<DeleteOutlined />}
+          onClick={handleDelete}
+        >
+          {t('common.delete')}
+        </Button>,
+      ]}
     >
       <Form {...formProps} layout="vertical">
         <Form.Item

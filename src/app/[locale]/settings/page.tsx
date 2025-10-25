@@ -6,15 +6,10 @@ import AdminLayout from "@/components/layout/admin-layout";
 import { use } from "react";
 import { useState, useEffect } from "react";
 import { supabaseBrowserClient as supabase } from "../../../../lib/supabase/client";
+import { useTranslations } from 'next-intl';
 
-interface SettingsPageProps {
-  params: Promise<{
-    locale: string;
-  }>;
-}
-
-export default function SettingsPage({ params }: SettingsPageProps) {
-  const { locale } = use(params);
+function SettingsContent() {
+  const t = useTranslations();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [settings, setSettings] = useState<any>(null);
@@ -111,18 +106,18 @@ export default function SettingsPage({ params }: SettingsPageProps) {
              }
            }
 
-      message.success('Settings saved successfully!');
+      message.success(t('settings.saveSuccess'));
     } catch (error: any) {
       console.error('Error saving settings:', error);
       
       if (error?.code === '42501') {
-        message.error('Permission denied. Please check RLS policies for demo_system_config table.');
+        message.error(t('settings.permissionDenied'));
       } else if (error?.code === 'PGRST204') {
-        message.error('Database schema error. Please check table structure.');
+        message.error(t('settings.schemaError'));
       } else if (error?.code === '42703') {
-        message.error('Database field error. Please check table schema.');
+        message.error(t('settings.fieldError'));
       } else {
-        message.error('Failed to save settings. Please try again.');
+        message.error(t('settings.saveError'));
       }
     } finally {
       setLoading(false);
@@ -135,35 +130,32 @@ export default function SettingsPage({ params }: SettingsPageProps) {
 
   if (!settings) {
     return (
-      <AdminLayout locale={locale}>
-        <div style={{ textAlign: 'center', padding: '50px' }}>
-          <div>Loading settings...</div>
-        </div>
-      </AdminLayout>
+      <div style={{ textAlign: 'center', padding: '50px' }}>
+        <div>{t('common.loading')}</div>
+      </div>
     );
   }
 
   return (
-    <AdminLayout locale={locale}>
-      <div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-          <h1 style={{ fontSize: '24px', margin: 0 }}>
-            <SettingOutlined /> System Settings
-          </h1>
-          <Space>
-            <Button icon={<ReloadOutlined />} onClick={handleReset}>
-              Reset
-            </Button>
-            <Button 
-              type="primary" 
-              icon={<SaveOutlined />} 
-              loading={loading}
-              onClick={() => form.submit()}
-            >
-              Save Settings
-            </Button>
-          </Space>
-        </div>
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+        <h1 style={{ fontSize: '24px', margin: 0 }}>
+          <SettingOutlined /> {t('settings.title')}
+        </h1>
+        <Space>
+          <Button icon={<ReloadOutlined />} onClick={handleReset}>
+            {t('settings.reset')}
+          </Button>
+          <Button 
+            type="primary" 
+            icon={<SaveOutlined />} 
+            loading={loading}
+            onClick={() => form.submit()}
+          >
+            {t('settings.save')}
+          </Button>
+        </Space>
+      </div>
 
         <Form
           form={form}
@@ -184,35 +176,35 @@ export default function SettingsPage({ params }: SettingsPageProps) {
           <Row gutter={24}>
             {/* General Settings */}
             <Col span={12}>
-              <Card title="📱 General Settings" style={{ marginBottom: '24px' }}>
+              <Card title={`📱 ${t('settings.generalSettings')}`} style={{ marginBottom: '24px' }}>
                 <Form.Item
-                  label="Application Name"
+                  label={t('settings.appName')}
                   name="app_name"
-                  rules={[{ required: true, message: 'Please enter application name!' }]}
+                  rules={[{ required: true, message: t('settings.appNameRequired') }]}
                 >
-                  <Input placeholder="Enter application name" />
+                  <Input placeholder={t('settings.appNamePlaceholder')} />
                 </Form.Item>
 
                 <Form.Item
-                  label="Application Version"
+                  label={t('settings.appVersion')}
                   name="app_version"
-                  rules={[{ required: true, message: 'Please enter application version!' }]}
+                  rules={[{ required: true, message: t('settings.appVersionRequired') }]}
                 >
-                  <Input placeholder="Enter application version" />
+                  <Input placeholder={t('settings.appVersionPlaceholder')} />
                 </Form.Item>
 
                 <Form.Item
-                  label="Default Language"
+                  label={t('settings.defaultLanguage')}
                   name="default_language"
                 >
                   <Select>
-                    <Select.Option value="vi">Tiếng Việt</Select.Option>
-                    <Select.Option value="en">English</Select.Option>
+                    <Select.Option value="vi">{t('settings.vietnamese')}</Select.Option>
+                    <Select.Option value="en">{t('settings.english')}</Select.Option>
                   </Select>
                 </Form.Item>
 
                 <Form.Item
-                  label="Maintenance Mode"
+                  label={t('settings.maintenanceMode')}
                   name="maintenance_mode"
                   valuePropName="checked"
                 >
@@ -223,30 +215,30 @@ export default function SettingsPage({ params }: SettingsPageProps) {
 
             {/* Limits Settings */}
             <Col span={12}>
-              <Card title="📊 Limits & Quotas" style={{ marginBottom: '24px' }}>
+              <Card title={`📊 ${t('settings.limitsQuotas')}`} style={{ marginBottom: '24px' }}>
                 <Form.Item
-                  label="Maximum Members"
+                  label={t('settings.maxMembers')}
                   name="max_members"
-                  rules={[{ required: true, message: 'Please enter maximum members!' }]}
+                  rules={[{ required: true, message: t('settings.maxMembersRequired') }]}
                 >
-                  <Input type="number" placeholder="Enter maximum members" />
+                  <Input type="number" placeholder={t('settings.maxMembersPlaceholder')} />
                 </Form.Item>
 
                 <Form.Item
-                  label="Max Cards per Member"
+                  label={t('settings.maxCardsPerMember')}
                   name="max_cards_per_member"
-                  rules={[{ required: true, message: 'Please enter max cards per member!' }]}
+                  rules={[{ required: true, message: t('settings.maxCardsRequired') }]}
                 >
-                  <Input type="number" placeholder="Enter max cards per member" />
+                  <Input type="number" placeholder={t('settings.maxCardsPlaceholder')} />
                 </Form.Item>
               </Card>
             </Col>
 
             {/* Notification Settings */}
             <Col span={12}>
-              <Card title="🔔 Notifications" style={{ marginBottom: '24px' }}>
+              <Card title={`🔔 ${t('settings.notifications')}`} style={{ marginBottom: '24px' }}>
                 <Form.Item
-                  label="Email Notifications"
+                  label={t('settings.emailNotifications')}
                   name="email_notifications"
                   valuePropName="checked"
                 >
@@ -257,9 +249,9 @@ export default function SettingsPage({ params }: SettingsPageProps) {
 
             {/* Backup Settings */}
             <Col span={12}>
-              <Card title="💾 Backup & Recovery" style={{ marginBottom: '24px' }}>
+              <Card title={`💾 ${t('settings.backupRecovery')}`} style={{ marginBottom: '24px' }}>
                 <Form.Item
-                  label="Auto Backup"
+                  label={t('settings.autoBackup')}
                   name="auto_backup"
                   valuePropName="checked"
                 >
@@ -267,14 +259,14 @@ export default function SettingsPage({ params }: SettingsPageProps) {
                 </Form.Item>
 
                 <Form.Item
-                  label="Backup Frequency"
+                  label={t('settings.backupFrequency')}
                   name="backup_frequency"
                 >
                   <Select>
-                    <Select.Option value="hourly">Hourly</Select.Option>
-                    <Select.Option value="daily">Daily</Select.Option>
-                    <Select.Option value="weekly">Weekly</Select.Option>
-                    <Select.Option value="monthly">Monthly</Select.Option>
+                    <Select.Option value="hourly">{t('settings.hourly')}</Select.Option>
+                    <Select.Option value="daily">{t('settings.daily')}</Select.Option>
+                    <Select.Option value="weekly">{t('settings.weekly')}</Select.Option>
+                    <Select.Option value="monthly">{t('settings.monthly')}</Select.Option>
                   </Select>
                 </Form.Item>
               </Card>
@@ -282,6 +274,21 @@ export default function SettingsPage({ params }: SettingsPageProps) {
           </Row>
         </Form>
       </div>
+    );
+}
+
+interface SettingsPageProps {
+  params: Promise<{
+    locale: string;
+  }>;
+}
+
+export default function SettingsPage({ params }: SettingsPageProps) {
+  const { locale } = use(params);
+  
+  return (
+    <AdminLayout locale={locale}>
+      <SettingsContent />
     </AdminLayout>
   );
 }

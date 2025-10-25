@@ -1,8 +1,8 @@
 "use client";
 
-import { List, useTable, EditButton, ShowButton, CreateButton } from "@refinedev/antd";
+import { List, useTable, EditButton, ShowButton } from "@refinedev/antd";
 import { Table, Space, Button, Popconfirm } from "antd";
-import { UserOutlined, DeleteOutlined } from "@ant-design/icons";
+import { UserOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import AdminLayout from "@/components/layout/admin-layout";
 import { use } from "react";
 import { useTranslations } from 'next-intl';
@@ -28,12 +28,19 @@ function MembersContent() {
   };
 
   return (
-    <List
-      headerButtons={[
-        <CreateButton key="create" />,
-      ]}
-      title={`👥 ${t('members.title')}`}
-    >
+        <List
+          headerButtons={[
+            <Button 
+              key="create" 
+              type="primary" 
+              icon={<PlusOutlined />}
+              onClick={() => window.location.href = `/${locale}/members/create`}
+            >
+              {t('members.create')}
+            </Button>,
+          ]}
+          title={`👥 ${t('members.title')}`}
+        >
       <Table
         {...tableProps}
         rowKey="id"

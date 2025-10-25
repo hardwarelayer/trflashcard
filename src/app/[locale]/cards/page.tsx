@@ -1,8 +1,8 @@
 "use client";
 
-import { List, useTable, EditButton, ShowButton, CreateButton } from "@refinedev/antd";
+import { List, useTable, EditButton, ShowButton } from "@refinedev/antd";
 import { Table, Space, Button, Popconfirm } from "antd";
-import { BookOutlined, DeleteOutlined } from "@ant-design/icons";
+import { BookOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import AdminLayout from "@/components/layout/admin-layout";
 import { use } from "react";
 import { useTranslations } from 'next-intl';
@@ -28,12 +28,19 @@ function CardsContent() {
   };
 
   return (
-    <List
-      headerButtons={[
-        <CreateButton key="create" />,
-      ]}
-      title={`📚 ${t('cards.title')}`}
-    >
+        <List
+          headerButtons={[
+            <Button 
+              key="create" 
+              type="primary" 
+              icon={<PlusOutlined />}
+              onClick={() => window.location.href = `/${locale}/cards/create`}
+            >
+              {t('cards.create')}
+            </Button>,
+          ]}
+          title={`📚 ${t('cards.title')}`}
+        >
       <Table
         {...tableProps}
         rowKey="id"
