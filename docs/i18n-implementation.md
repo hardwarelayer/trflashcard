@@ -15,23 +15,41 @@ This document outlines the complete i18n (internationalization) implementation f
   - Proper NextIntlClientProvider setup
   - Clean redirect handling
 
-### Phase 6.2: Sidebar i18n 🔄 IN PROGRESS
-- **Status**: Pending
-- **Target**: Menu items and navigation labels
+### Phase 6.2: Sidebar i18n ✅ COMPLETED
+- **Status**: Successfully implemented
+- **Features**: 
+  - Menu items translation (Dashboard, Members, Cards, Settings)
+  - Admin panel title translation
+  - Logout button translation
+  - Language switcher with flag buttons
 - **Files**: `src/components/navigation/sidebar.tsx`
 
-### Phase 6.3: Dashboard i18n ⏳ PENDING
-- **Status**: Pending
-- **Target**: Statistics labels and dashboard content
+### Phase 6.3: Dashboard i18n ✅ COMPLETED
+- **Status**: Successfully implemented
+- **Features**:
+  - Statistics labels translation
+  - Card titles and descriptions translation
+  - Loading state translation
+  - Component architecture (Server/Client separation)
 - **Files**: `src/app/[locale]/dashboard/page.tsx`
 
-### Phase 6.4: Members Page i18n ⏳ PENDING
-- **Status**: Pending
-- **Target**: Table headers and forms
-- **Files**: `src/app/[locale]/members/page.tsx`
+### Phase 6.4: Members Page i18n ✅ COMPLETED
+- **Status**: Successfully implemented
+- **Features**:
+  - Table headers and pagination translation
+  - Create/Edit/Show forms translation
+  - Form validation messages translation
+  - Delete confirmation dialog translation
+  - Component architecture (Server/Client separation)
+  - Dynamic locale routing for Refine resources
+- **Files**: 
+  - `src/app/[locale]/members/page.tsx`
+  - `src/app/[locale]/members/create/page.tsx`
+  - `src/app/[locale]/members/edit/[id]/page.tsx`
+  - `src/app/[locale]/members/show/[id]/page.tsx`
 
-### Phase 6.5: Cards Page i18n ⏳ PENDING
-- **Status**: Pending
+### Phase 6.5: Cards Page i18n 🔄 IN PROGRESS
+- **Status**: In Progress
 - **Target**: Table headers and forms
 - **Files**: `src/app/[locale]/cards/page.tsx`
 
@@ -39,6 +57,150 @@ This document outlines the complete i18n (internationalization) implementation f
 - **Status**: Pending
 - **Target**: System config labels
 - **Files**: `src/app/[locale]/settings/page.tsx`
+
+## 🎯 Phase 6.4: Members Page i18n - COMPLETED
+
+### **✅ Features Implemented:**
+
+1. **Table Headers i18n** - Username, Full Name, Status, Created At, Actions
+2. **Pagination i18n** - "của" / "of" with dynamic range display
+3. **Create Form i18n** - All labels, placeholders, validation messages
+4. **Edit Form i18n** - All labels, placeholders, validation messages
+5. **Show Page i18n** - Basic info, system info, status display
+6. **Delete Confirmation i18n** - Custom Popconfirm with translated text
+7. **Component Architecture** - Server/Client separation for proper context
+8. **Dynamic Routing** - Refine resources use current locale
+
+### **🌍 Translation Keys Added:**
+
+**Vietnamese (vi.json):**
+```json
+{
+  "members": {
+    "title": "Quản lý thành viên",
+    "list": "Danh sách thành viên", 
+    "create": "Tạo thành viên",
+    "edit": "Sửa thành viên",
+    "show": "Chi tiết thành viên",
+    "delete": "Xóa thành viên",
+    "username": "Tên đăng nhập",
+    "password": "Mật khẩu",
+    "fullName": "Họ tên",
+    "status": "Trạng thái",
+    "active": "Hoạt động",
+    "inactive": "Không hoạt động",
+    "createdAt": "Ngày tạo",
+    "actions": "Thao tác",
+    "pagination": "của",
+    "basicInfo": "Thông tin cơ bản",
+    "systemInfo": "Thông tin hệ thống",
+    "notUpdated": "Chưa cập nhật",
+    "lastUpdated": "Cập nhật lần cuối"
+  }
+}
+```
+
+**English (en.json):**
+```json
+{
+  "members": {
+    "title": "Member Management",
+    "list": "Member List",
+    "create": "Create Member", 
+    "edit": "Edit Member",
+    "show": "Member Details",
+    "delete": "Delete Member",
+    "username": "Username",
+    "password": "Password",
+    "fullName": "Full Name",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "createdAt": "Created At",
+    "actions": "Actions",
+    "pagination": "of",
+    "basicInfo": "Basic Information",
+    "systemInfo": "System Information",
+    "notUpdated": "Not updated",
+    "lastUpdated": "Last updated"
+  }
+}
+```
+
+### **🔧 Technical Solutions:**
+
+1. **Component Architecture Pattern:**
+   ```typescript
+   // Server Component
+   export default function MembersPage({ params }: MembersPageProps) {
+     const { locale } = use(params);
+     return (
+       <AdminLayout locale={locale}>
+         <MembersContent />
+       </AdminLayout>
+     );
+   }
+
+   // Client Component  
+   function MembersContent() {
+     const t = useTranslations();
+     // ... component logic
+   }
+   ```
+
+2. **Custom Delete Confirmation:**
+   ```typescript
+   <Popconfirm
+     title={t('common.deleteConfirm')}
+     onConfirm={() => handleDelete(record.id)}
+     okText={t('common.yes')}
+     cancelText={t('common.no')}
+   >
+     <Button type="text" danger size="small" icon={<DeleteOutlined />} />
+   </Popconfirm>
+   ```
+
+3. **Dynamic Locale Routing:**
+   ```typescript
+   // refine-wrapper.tsx
+   resources={[
+     {
+       name: "demo_member",
+       list: `/${locale}/members`,
+       create: `/${locale}/members/create`,
+       edit: `/${locale}/members/edit/:id`,
+       show: `/${locale}/members/show/:id`,
+     }
+   ]}
+   ```
+
+### **🚀 Working Routes:**
+- `/vi/members` ✅ - Vietnamese members list
+- `/en/members` ✅ - English members list  
+- `/vi/members/create` ✅ - Vietnamese create form
+- `/en/members/create` ✅ - English create form
+- `/vi/members/edit/[id]` ✅ - Vietnamese edit form
+- `/en/members/edit/[id]` ✅ - English edit form
+- `/vi/members/show/[id]` ✅ - Vietnamese show page
+- `/en/members/show/[id]` ✅ - English show page
+
+## 🧹 Code Cleanup Process
+
+### **✅ Cleanup Completed:**
+
+1. **Removed Unused Imports** - `useOne` from edit page
+2. **Removed Unused Variables** - `memberData` from edit page  
+3. **Fixed Hardcoded Locale** - `toLocaleDateString('vi-VN')` → `toLocaleDateString()`
+4. **Fixed Hardcoded Locale** - `toLocaleString('vi-VN')` → `toLocaleString()`
+5. **Custom Delete Button** - Replaced `DeleteButton` with `Popconfirm` + `Button`
+6. **Dynamic Locale Formatting** - Date formatting automatically follows browser locale
+
+### **🔧 Benefits:**
+
+- **Dynamic Locale** - Date formatting will automatically follow browser locale
+- **Cleaner Code** - No unused imports/variables
+- **Better i18n** - Consistent with i18n approach
+- **Custom Components** - Full control over UI elements and translations
 
 ## 🏗️ Technical Architecture
 
@@ -242,15 +404,20 @@ import { StyleProvider } from '@ant-design/cssinjs';
 - **Phase 6.1**: Login Page i18n ✅
 - **Phase 6.2**: Sidebar i18n ✅
 - **Phase 6.3**: Dashboard i18n ✅
+- **Phase 6.4**: Members Page i18n ✅
 - Clean codebase
 - Proper routing setup
 - Translation infrastructure
 - CSS-in-JS fixes
 - Context hierarchy fixes
+- Dynamic locale routing
+- Custom delete confirmation
+- Code cleanup process
+
+### 🔄 In Progress
+- **Phase 6.5**: Cards Page i18n
 
 ### ⏳ Pending
-- **Phase 6.4**: Members Page i18n
-- **Phase 6.5**: Cards Page i18n
 - **Phase 6.6**: Settings Page i18n
 
 ## 📊 Implementation Progress

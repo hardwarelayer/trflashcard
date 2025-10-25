@@ -6,18 +6,12 @@ import { Typography, Tag, Space } from "antd";
 import { UserOutlined, CalendarOutlined, CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import AdminLayout from "@/components/layout/admin-layout";
 import { use } from "react";
+import { useTranslations } from 'next-intl';
 
 const { Title, Text } = Typography;
 
-interface ShowMemberPageProps {
-  params: Promise<{
-    locale: string;
-    id: string;
-  }>;
-}
-
-export default function ShowMemberPage({ params }: ShowMemberPageProps) {
-  const { locale, id } = use(params);
+function ShowMemberContent({ id }: { id: string }) {
+  const t = useTranslations();
   
   const { result: data, query } = useOne({
     resource: "demo_member",
@@ -29,32 +23,31 @@ export default function ShowMemberPage({ params }: ShowMemberPageProps) {
   const record = data?.data;
 
   return (
-    <AdminLayout locale={locale}>
-      <Show
-        title="Chi tiết Member"
-        isLoading={isLoading}
-      >
+    <Show
+      title={t('members.show')}
+      isLoading={isLoading}
+    >
       <Space direction="vertical" size="large" style={{ width: '100%' }}>
         <div>
           <Title level={4}>
-            <UserOutlined /> Thông tin cơ bản
+            <UserOutlined /> {t('members.basicInfo')}
           </Title>
           <Space direction="vertical" size="small">
             <div>
-              <Text strong>Username: </Text>
+              <Text strong>{t('members.username')}: </Text>
               <Text>{record?.username}</Text>
             </div>
             <div>
-              <Text strong>Họ tên: </Text>
-              <Text>{record?.full_name || 'Chưa cập nhật'}</Text>
+              <Text strong>{t('members.fullName')}: </Text>
+              <Text>{record?.full_name || t('members.notUpdated')}</Text>
             </div>
             <div>
-              <Text strong>Trạng thái: </Text>
+              <Text strong>{t('members.status')}: </Text>
               <Tag 
                 color={record?.status === 1 ? 'green' : 'red'}
                 icon={record?.status === 1 ? <CheckCircleOutlined /> : <CloseCircleOutlined />}
               >
-                {record?.status === 1 ? 'Hoạt động' : 'Không hoạt động'}
+                {record?.status === 1 ? t('members.active') : t('members.inactive')}
               </Tag>
             </div>
           </Space>
@@ -62,16 +55,16 @@ export default function ShowMemberPage({ params }: ShowMemberPageProps) {
 
         <div>
           <Title level={4}>
-            <CalendarOutlined /> Thông tin hệ thống
+            <CalendarOutlined /> {t('members.systemInfo')}
           </Title>
           <Space direction="vertical" size="small">
             <div>
-              <Text strong>Ngày tạo: </Text>
-              <Text>{record?.created_at ? new Date(record.created_at).toLocaleString('vi-VN') : 'N/A'}</Text>
+              <Text strong>{t('members.createdAt')}: </Text>
+              <Text>{record?.created_at ? new Date(record.created_at).toLocaleString() : 'N/A'}</Text>
             </div>
             <div>
-              <Text strong>Cập nhật lần cuối: </Text>
-              <Text>{record?.updated_at ? new Date(record.updated_at).toLocaleString('vi-VN') : 'N/A'}</Text>
+              <Text strong>{t('members.lastUpdated')}: </Text>
+              <Text>{record?.updated_at ? new Date(record.updated_at).toLocaleString() : 'N/A'}</Text>
             </div>
             <div>
               <Text strong>ID: </Text>
@@ -81,6 +74,22 @@ export default function ShowMemberPage({ params }: ShowMemberPageProps) {
         </div>
       </Space>
     </Show>
+  );
+}
+
+interface ShowMemberPageProps {
+  params: Promise<{
+    locale: string;
+    id: string;
+  }>;
+}
+
+export default function ShowMemberPage({ params }: ShowMemberPageProps) {
+  const { locale, id } = use(params);
+  
+  return (
+    <AdminLayout locale={locale}>
+      <ShowMemberContent id={id} />
     </AdminLayout>
   );
 }

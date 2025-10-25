@@ -51,7 +51,7 @@ export default function RefineWrapper({ children, locale = 'vi' }: RefineWrapper
                 resources={[
                   {
                     name: "dashboard",
-                    list: "/vi/dashboard",
+                    list: `/${locale}/dashboard`,
                     meta: {
                       label: "Dashboard",
                       icon: "🏠",
@@ -59,10 +59,10 @@ export default function RefineWrapper({ children, locale = 'vi' }: RefineWrapper
                   },
                   {
                     name: "demo_member",
-                    list: "/vi/members",
-                    create: "/vi/members/create",
-                    edit: "/vi/members/edit/:id",
-                    show: "/vi/members/show/:id",
+                    list: `/${locale}/members`,
+                    create: `/${locale}/members/create`,
+                    edit: `/${locale}/members/edit/:id`,
+                    show: `/${locale}/members/show/:id`,
                     meta: {
                       label: "Members",
                       icon: "👥",
@@ -71,10 +71,10 @@ export default function RefineWrapper({ children, locale = 'vi' }: RefineWrapper
                   },
                   {
                     name: "demo_card",
-                    list: "/vi/cards",
-                    create: "/vi/cards/create",
-                    edit: "/vi/cards/edit/:id",
-                    show: "/vi/cards/show/:id",
+                    list: `/${locale}/cards`,
+                    create: `/${locale}/cards/create`,
+                    edit: `/${locale}/cards/edit/:id`,
+                    show: `/${locale}/cards/show/:id`,
                     meta: {
                       label: "Cards",
                       icon: "📚",
