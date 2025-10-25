@@ -31,7 +31,9 @@
     "adminNote": "Use Supabase Admin account",
     "loginSuccess": "Login successful",
     "loginError": "Login failed",
-    "logoutSuccess": "Logout successful"
+    "logoutSuccess": "Logout successful",
+    "selectLanguage": "Select Language",
+    "language": "Language"
   },
   "dashboard": {
     "title": "Dashboard",

@@ -31,7 +31,9 @@
     "adminNote": "Sử dụng tài khoản Supabase Admin",
     "loginSuccess": "Đăng nhập thành công",
     "loginError": "Đăng nhập thất bại",
-    "logoutSuccess": "Đăng xuất thành công"
+    "logoutSuccess": "Đăng xuất thành công",
+    "selectLanguage": "Chọn ngôn ngữ",
+    "language": "Ngôn ngữ"
   },
   "dashboard": {
     "title": "Bảng điều khiển",

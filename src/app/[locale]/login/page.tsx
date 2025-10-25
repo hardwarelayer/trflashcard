@@ -1,15 +1,25 @@
 "use client"
 
 import { useLogin } from "@refinedev/core";
-import { Button, Card, Form, Input, Typography } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { useTranslations } from 'next-intl';
+import { Button, Card, Form, Input, Typography, Select, Space } from "antd";
+import { UserOutlined, LockOutlined, GlobalOutlined } from "@ant-design/icons";
+import { useTranslations, useLocale } from 'next-intl';
+import { useRouter, usePathname } from 'next/navigation';
 
 const { Title, Text } = Typography;
 
 export default function Login() {
   const { mutate: login } = useLogin();
   const t = useTranslations();
+  const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const handleLanguageChange = (newLocale: string) => {
+    // Replace current locale in pathname
+    const newPath = pathname.replace(`/${locale}`, `/${newLocale}`);
+    router.push(newPath);
+  };
 
   const onFinish = (values: { email: string; password: string }) => {
     login({
@@ -30,6 +40,21 @@ export default function Login() {
         <div style={{ textAlign: 'center', marginBottom: '24px' }}>
           <Title level={2}>🎉 TR Flashcard</Title>
           <Text type="secondary">{t('auth.adminLogin')}</Text>
+        </div>
+        
+        <div style={{ marginBottom: '24px', textAlign: 'center' }}>
+          <Space>
+            <GlobalOutlined />
+            <Select
+              value={locale}
+              onChange={handleLanguageChange}
+              style={{ width: 120 }}
+              size="small"
+            >
+              <Select.Option value="vi">🇻🇳 Tiếng Việt</Select.Option>
+              <Select.Option value="en">🇺🇸 English</Select.Option>
+            </Select>
+          </Space>
         </div>
         
         <Form
